@@ -66,9 +66,17 @@ public class State {
 	
 	/**
 	 * Calculates the hash value for the current state.
+	 * 
+	 * This should conform to the definition of state equality.
 	 */
-	private final void setHash() {
-		hash = Board.zValues[playerPosition.row][playerPosition.col];
+	private void setHash() {
+		for(byte i=0; i<Board.rows+2; i++) {
+			for(byte j=0; j<Board.cols+2; j++) {
+				if(connectivity.isReachable(i,j)) {
+					hash ^= Board.zValues[i][j];
+				}
+			}
+		}
 		for (BoardPosition bp : boxPositions) {
 			hash ^= Board.zValues[bp.row][bp.col];
 		}
