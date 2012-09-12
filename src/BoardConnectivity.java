@@ -25,8 +25,6 @@ public class BoardConnectivity {
 	public static final byte[] colMask = {1, 0, -1, 0};
 
 	private final byte[][] connectivity;
-	private final byte rows;
-	private final byte cols; 
 
 	/**
 	 * Constructs the connectivity matrix for the 
@@ -35,12 +33,10 @@ public class BoardConnectivity {
 	 * @param state State used for connectivity graph
 	 */
 	public BoardConnectivity(State state) {
-		rows = Board.rows;
-		cols = Board.cols;
-		connectivity = new byte[rows+2][cols+2];
+		connectivity = new byte[Board.rows+2][Board.cols+2];
 
-		for(int i=0; i<rows+2; i++) {
-			for(int j=0; j<cols+2; j++) {
+		for(int i=0; i<Board.rows+2; i++) {
+			for(int j=0; j<Board.cols+2; j++) {
 				connectivity[i][j] = 0;
 			}
 		}
@@ -53,7 +49,7 @@ public class BoardConnectivity {
 	 * 
 	 * @param state State checked for connectivity
 	 */
-	private final void setConnectivity(State state) {
+	private void setConnectivity(State state) {
 		LinkedList<BoardPosition> positionsToExpand = new LinkedList<BoardPosition>();
 
 		positionsToExpand.add(state.playerPosition);
@@ -80,20 +76,10 @@ public class BoardConnectivity {
 			}
 		}
 	}
-
-	/**
-	 * Returns <code>true</code> if the supplied position is reachable.
-	 * 
-	 * @param bp Position to test for reachability.
-	 * @return
-	 */
-	public boolean isReachable(BoardPosition bp) {
-		byte row = bp.row;
-		byte col = bp.col;
-
+	
+	public boolean isReachable(byte row, byte col) {
 		return connectivity[row][col] != 0;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -106,14 +92,14 @@ public class BoardConnectivity {
 
 	/**
 	 * Two connectivity objects are seen as equal if
-	 * Exactly the same squares are reachable in both.
+	 * exactly the same squares are reachable in both.
 	 * 
 	 * @param bc
 	 * @return
 	 */
-	private final boolean equals(BoardConnectivity bc) {
-		for(int i=1; i<=rows; i++) {
-			for(int j=1; j<=cols; j++) {
+	private boolean equals(BoardConnectivity bc) {
+		for(int i=1; i<=Board.rows; i++) {
+			for(int j=1; j<=Board.cols; j++) {
 				if((connectivity[i][j] == 0) != (bc.connectivity[i][j] == 0)) {
 					return false;
 				}
@@ -127,8 +113,8 @@ public class BoardConnectivity {
 	public String toString() {
 		String result = "";
 
-		for(int i=1; i<=rows; i++) {
-			for(int j=1; j<=cols; j++) {
+		for(int i=1; i<=Board.rows; i++) {
+			for(int j=1; j<=Board.cols; j++) {
 				switch (connectivity[i][j]) {
 				case MOVE_RIGHT:
 					result += "R";

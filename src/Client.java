@@ -41,6 +41,8 @@ public class Client {
             
             System.out.println("\nInitial connectivity:");
             System.out.println(Board.state.connectivity.toString());
+            
+            System.out.println(Board.state.hash);
 
             //send the solution to the server
             lOut.flush();

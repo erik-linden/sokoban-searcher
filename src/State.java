@@ -17,7 +17,7 @@ public class State {
 	public long hash = 0;
 	
 	/**
-	 * Construct a new state from a static board, the players postion and
+	 * Construct a new state from a static board, the players position and
 	 * a list of box positions.
 	 * 
 	 * @param board the static board
@@ -82,12 +82,7 @@ public class State {
 		}
 	}
 	
-	/**
-	 * Checks to see if the board has been solved.
-	 * 
-	 * @return
-	 */
-	public final boolean isSolved() {
+	public boolean isSolved() {
 		int boxesOnGoal = boxesOnGoals();
 	
 		if (boxesOnGoal == Board.goalPositions.size()) {
@@ -97,11 +92,6 @@ public class State {
 		return false;
 	}
 	
-	/**
-	 * Counts the number of boxes on goal squares.
-	 * 
-	 * @return
-	 */
 	public byte boxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
@@ -113,13 +103,6 @@ public class State {
 		return sum;
 	}
 	
-	/**
-	 * Returns true if the player can't enter the square.
-	 * 
-	 * @param row
-	 * @param col
-	 * @return
-	 */
 	public boolean isOccupied(byte row, byte col) {
 		return board.wallAt(row, col) || boxAt(row, col);
 	}
@@ -150,7 +133,7 @@ public class State {
 	 * @param state
 	 * @return
 	 */
-	private final boolean equals(State state) {
+	private boolean equals(State state) {
 		boolean hasSameBoxPos = state.boxPositions.containsAll(this.boxPositions);
 		boolean hasSameConnectivity = state.connectivity.equals(this.connectivity);
 		
