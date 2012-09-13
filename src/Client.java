@@ -47,10 +47,19 @@ public class Client {
             
             Vector<State> childStates = new Vector<State>();
             Board.state.getPushStates(childStates);
+                        
+            for(State state : childStates) {
+            	System.out.println(state.toString());
+            }
+            
+            childStates.lastElement().getPushStates(childStates);
             
             for(State state : childStates) {
             	System.out.println(state.toString());
             }
+            
+            System.out.println(childStates.lastElement().backtrackSolution());
+
             
 //            System.out.println(Board.state.hash);
 
