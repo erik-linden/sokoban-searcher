@@ -149,6 +149,14 @@ public class State {
 		return false;
 	}
 	
+	public boolean playerAt(byte row, byte col) {
+		if (playerPosition.row == row && playerPosition.col == col) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof State) {
@@ -176,6 +184,32 @@ public class State {
 	public int hashCode() {
 		return (int) hash;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		String result = "";
+		
+		for(byte i=1; i<=Board.rows; i++) {
+			for(byte j=1; j<=Board.cols; j++) {
+				if(boxAt(i, j)){
+					result += "$";
+				}
+				else if(playerAt(i, j)) {
+					result += "@";
+				}
+				else if(Board.goalAt(i, j)) {
+					result += ".";
+				}
+				else if(Board.wallAt(i, j)) {
+					result += "#";
+				}
+				else {
+					result += " ";
+				}
+			}
+			result += "\n";
+		}
+		
+		return result;
+	}
 }
