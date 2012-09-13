@@ -5,7 +5,7 @@ import java.util.Vector;
 public class Client {
 
 	public static void main(String[] pArgs) 
-	{
+	{		
 		if(pArgs.length<3)
 		{
 			System.out.println("usage: java Client host port boardnum");
@@ -42,7 +42,17 @@ public class Client {
             System.out.println("\nInitial connectivity:");
             System.out.println(Board.state.connectivity.toString());
             
-            System.out.println(Board.state.hash);
+            System.out.println("\nInitial state:");
+            System.out.println(Board.state.toString());
+            
+            Vector<State> childStates = new Vector<State>();
+            Board.state.getPushStates(childStates);
+            
+            for(State state : childStates) {
+            	System.out.println(state.toString());
+            }
+            
+//            System.out.println(Board.state.hash);
 
             //send the solution to the server
             lOut.flush();
