@@ -100,15 +100,15 @@ public final class Board {
 		state = new State(this, playerPosition, boxPositions);
 	}
 
-	public final boolean floorAt(byte row, byte col) {
+	public static boolean floorAt(byte row, byte col) {
 		return (board[row][col]&FLOOR) != 0;
 	}
 
-	public final boolean goalAt(byte row, byte col) {
+	public static boolean goalAt(byte row, byte col) {
 		return board[row][col] == GOAL;
 	}
 
-	public final boolean wallAt(byte row, byte col) {
+	public static boolean wallAt(byte row, byte col) {
 		return board[row][col] == WALL;
 	}
 	
