@@ -14,6 +14,8 @@ public class State {
 	
 	public final BoardConnectivity connectivity;
 	public final State rootState;
+	public final byte lastMove;
+	
 	public long hash = 0;
 	
 	/**
@@ -31,6 +33,7 @@ public class State {
 		this.boxPositions 	= boxPositions;
 		this.rootState 		= null;
 		this.connectivity 	= new BoardConnectivity(this);
+		this.lastMove 		= BoardConnectivity.MOVE_NULL;
 		setHash();
 	}
 	
@@ -45,6 +48,7 @@ public class State {
 		this.rootState	 	= parent;
 		this.board 			= parent.board;
 		this.playerPosition = new BoardPosition(oldBoxPosition);
+		this.lastMove 		= move;
 		
 		Vector<BoardPosition> bpv = new Vector<BoardPosition>();
 		for(BoardPosition bp : parent.boxPositions) {
