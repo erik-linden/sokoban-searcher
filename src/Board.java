@@ -9,7 +9,7 @@ import java.util.Vector;
  * @author Erik
  *
  */
-public final class Board {
+public class Board {
 	public static final byte FLOOR = (1 << 0);
 	public static final byte WALL  = (1 << 1);
 	public static final byte GOAL  = (1 << 2);

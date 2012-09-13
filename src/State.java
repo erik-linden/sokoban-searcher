@@ -103,6 +103,7 @@ public class State  implements Comparable<State> {
 	
 	public String backtrackSolution() {
 		String result = "";
+		System.out.println(toString());
 		
 		if(lastMove == BoardConnectivity.MOVE_NULL) {
 			return result;
@@ -157,7 +158,7 @@ public class State  implements Comparable<State> {
 	public byte boxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
-			if (board.goalAt(boxCoordinate.row, boxCoordinate.col)) {
+			if (Board.goalAt(boxCoordinate.row, boxCoordinate.col)) {
 				sum++;
 			}
 		}
@@ -166,7 +167,7 @@ public class State  implements Comparable<State> {
 	}
 	
 	public boolean isOccupied(byte row, byte col) {
-		return board.wallAt(row, col) || boxAt(row, col);
+		return Board.wallAt(row, col) || boxAt(row, col);
 	}
 
 	public boolean boxAt(byte row, byte col) {

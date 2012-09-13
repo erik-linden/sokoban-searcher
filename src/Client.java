@@ -34,31 +34,37 @@ public class Client {
                 lines.add(lLine);
                 System.out.println(lLine);
             }
-            Board board = new Board(lines);
+            String sol = Solver.solve(lines);
             
-            System.out.println("\nAll static elements:");
-            System.out.println(board.toString());
+            System.out.println(sol);
             
-            System.out.println("\nInitial connectivity:");
-            System.out.println(Board.state.connectivity.toString());
-            
-            System.out.println("\nInitial state:");
-            System.out.println(Board.state.toString());
-            
-            Vector<State> childStates = new Vector<State>();
-            Board.state.getPushStates(childStates);
-                        
-            for(State state : childStates) {
-            	System.out.println(state.toString());
-            }
-            
-            childStates.lastElement().getPushStates(childStates);
-            
-            for(State state : childStates) {
-            	System.out.println(state.toString());
-            }
-            
-            System.out.println(childStates.lastElement().backtrackSolution());
+//            Board board = new Board(lines);
+//            
+//            System.out.println("\nAll static elements:");
+//            System.out.println(board.toString());
+//            
+//            System.out.println("\nInitial connectivity:");
+//            System.out.println(Board.state.connectivity.toString());
+//            
+//            System.out.println("\nInitial state:");
+//            System.out.println(Board.state.toString());
+//            
+//            Vector<State> childStates = new Vector<State>();
+//            Board.state.getPushStates(childStates);
+//                        
+//            for(State state : childStates) {
+//            	System.out.println(state.toString());
+//            	System.out.println(state.heuristicValue);
+//            }
+//            
+//            childStates.lastElement().getPushStates(childStates);
+//            
+//            for(State state : childStates) {
+//            	System.out.println(state.toString());
+//            	System.out.println(state.heuristicValue);
+//            }
+//            
+//            System.out.println(childStates.lastElement().backtrackSolution());
 
             
 //            System.out.println(Board.state.hash);
