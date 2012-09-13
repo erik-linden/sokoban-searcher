@@ -13,7 +13,7 @@ public class State {
 	public final Vector<BoardPosition> boxPositions;
 	
 	public final BoardConnectivity connectivity;
-	public final State rootState;
+	public final State parent;
 	public final byte lastMove;
 	
 	public long hash = 0;
@@ -31,7 +31,7 @@ public class State {
 		this.board = board;
 		this.playerPosition = playerPosition;
 		this.boxPositions 	= boxPositions;
-		this.rootState 		= null;
+		this.parent 		= null;
 		this.connectivity 	= new BoardConnectivity(this);
 		this.lastMove 		= BoardConnectivity.MOVE_NULL;
 		setHash();
@@ -45,7 +45,7 @@ public class State {
 	 * @param move the move made to push the box, from <code>BoardConnectivity</code>
 	 */
 	public State(State parent, BoardPosition oldBoxPosition, byte move) {
-		this.rootState	 	= parent;
+		this.parent	 	= parent;
 		this.board 			= parent.board;
 		this.playerPosition = new BoardPosition(oldBoxPosition);
 		this.lastMove 		= move;
@@ -94,6 +94,31 @@ public class State {
 				}
 			}
 		}
+	}
+	
+	public String backtrackSolution() {
+		String result = "";
+		
+		if(lastMove == BoardConnectivity.MOVE_NULL) {
+			return result;
+		}
+		
+		result += BoardConnectivity.moveLetters.charAt(lastMove);
+		
+		byte currRow = (byte) (playerPosition.row - BoardConnectivity.rowMask[lastMove]);
+		byte currCol = (byte) (playerPosition.col - BoardConnectivity.colMask[lastMove]);
+		
+		byte startRow = parent.playerPosition.row;
+		byte startCol = parent.playerPosition.col;
+		
+		BoardPosition endPos = new BoardPosition(currRow, currCol);
+		BoardPosition startPos = new BoardPosition(startRow, startCol);
+		
+		result += parent.connectivity.backtrackPath(endPos, startPos);
+		
+		result += parent.backtrackSolution();
+		
+		return result;
 	}
 	
 	/**

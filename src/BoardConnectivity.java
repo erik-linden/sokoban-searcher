@@ -78,6 +78,34 @@ public class BoardConnectivity {
 		}
 	}
 	
+	public String backtrackPath(BoardPosition endPos, BoardPosition startPos) {
+		String result = "";
+		
+		byte row = (byte) endPos.row;
+		byte col = (byte) endPos.col;
+		
+		if(!isReachable(row, col)) {
+			throw new RuntimeException("Backtracking started on unreachable square!");
+		}
+		
+		byte move = (byte) (connectivity[row][col]);
+		
+		while(move!=MOVE_NULL) {
+			if(move==NO_MOVE) {
+				throw new RuntimeException("Backtracking led to unreachable square!");
+			}
+			
+			result += moveLetters.charAt(move);
+			
+			row -= rowMask[move];
+			col -= colMask[move];
+			
+			move = connectivity[row][col];
+		}
+		
+		return result;
+	}
+	
 	public boolean isReachable(byte row, byte col) {
 		return connectivity[row][col] != NO_MOVE;
 	}
