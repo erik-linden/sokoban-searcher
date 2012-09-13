@@ -47,7 +47,13 @@ public class Board {
 	 */
 	public Board(Vector<String> lines) {
 		rows = (byte) lines.size();
-		cols = (byte) lines.get(0).length();
+		cols = (byte) 0;
+		
+		for(String r : lines) {
+			if(r.length()>cols) {
+				cols = (byte) r.length();
+			}
+		}
 		
 		/*
 		 * Pad the sides so we don't have to worry about edge effects.
@@ -61,7 +67,7 @@ public class Board {
 		Random random = new Random();
 		for (byte i=1; i<=rows; i++) {
 			String line = lines.get(i-1);
-			for (byte j=1; j<=cols; j++) {
+			for (byte j=1; j<=line.length(); j++) {
 				char character = line.charAt(j-1);
 
 				zValues[i][j] = random.nextLong();
