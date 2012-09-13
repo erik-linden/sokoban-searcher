@@ -68,6 +68,34 @@ public class State {
 		setHash();
 	}
 	
+	public void getPushStates(Vector<State> childStates) {
+		childStates.clear();
+		
+		for(BoardPosition boxPos : boxPositions) {
+			byte row = boxPos.row;
+			byte col = boxPos.col;
+			
+			for(byte i=0; i<4; i++) {
+				byte playerInd = (byte) ((i+2) % 4);
+				
+				byte pushedBoxRow = (byte) (row + BoardConnectivity.rowMask[i]);
+				byte pushedBoxCol = (byte) (col + BoardConnectivity.colMask[i]);
+				
+				byte playerRow = (byte) (row + BoardConnectivity.rowMask[playerInd]);
+				byte playerCol = (byte) (col + BoardConnectivity.colMask[playerInd]);
+				
+				boolean playerPosReachable   = connectivity.isReachable(playerRow, playerCol);
+				boolean pushTargetUnOccupied = !isOccupied(pushedBoxRow, pushedBoxCol);
+						
+				if(playerPosReachable && pushTargetUnOccupied) {
+					byte move = i;
+					
+					childStates.add(new State(this, boxPos, move));
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Calculates the hash value for the current state.
 	 * 
