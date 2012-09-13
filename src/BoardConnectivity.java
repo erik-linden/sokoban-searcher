@@ -129,7 +129,7 @@ public class BoardConnectivity {
 	private boolean equals(BoardConnectivity bc) {
 		for(int i=1; i<=Board.rows; i++) {
 			for(int j=1; j<=Board.cols; j++) {
-				if((connectivity[i][j] == 0) != (bc.connectivity[i][j] == 0)) {
+				if((connectivity[i][j] == NO_MOVE) != (bc.connectivity[i][j] == NO_MOVE)) {
 					return false;
 				}
 			}
