@@ -139,4 +139,11 @@ public class State {
 		
 		return hasSameBoxPos && hasSameConnectivity;
 	}
+
+	@Override
+	public int hashCode() {
+		return (int) hash;
+	}
+	
+	
 }
