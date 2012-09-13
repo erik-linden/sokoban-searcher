@@ -7,7 +7,7 @@ import java.util.Vector;
  * @author Erik
  *
  */
-public class State {
+public class State  implements Comparable<State> {
 	public final Board board;
 	public final BoardPosition playerPosition;
 	public final Vector<BoardPosition> boxPositions;
@@ -15,6 +15,7 @@ public class State {
 	public final BoardConnectivity connectivity;
 	public final State parent;
 	public final byte lastMove;
+	public final int heuristicValue;
 	
 	public long hash = 0;
 	
@@ -34,7 +35,9 @@ public class State {
 		this.parent 		= null;
 		this.connectivity 	= new BoardConnectivity(this);
 		this.lastMove 		= BoardConnectivity.MOVE_NULL;
+		
 		setHash();
+		this.heuristicValue = Heuristics.calculateHeuristic(this);
 	}
 	
 	/**
@@ -65,7 +68,9 @@ public class State {
 		boxPositions.add(newBox);
 		
 		connectivity = new BoardConnectivity(this);
+		
 		setHash();
+		this.heuristicValue = Heuristics.calculateHeuristic(this);
 	}
 	
 	public void getPushStates(Vector<State> childStates) {
@@ -236,5 +241,15 @@ public class State {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public int compareTo(State other) {
+		if (this.heuristicValue == other.heuristicValue)
+            return 0;
+        else if (this.heuristicValue < other.heuristicValue)
+            return 1;
+        else
+            return -1;
 	}
 }
