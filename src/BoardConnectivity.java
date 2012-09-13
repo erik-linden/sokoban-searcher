@@ -8,11 +8,12 @@ import java.util.LinkedList;
  *
  */
 public class BoardConnectivity {
+	public static final byte NO_MOVE    = -2;
 	public static final byte MOVE_NULL  = -1;
-	public static final byte MOVE_RIGHT = (1 << 0);
-	public static final byte MOVE_UP    = (1 << 1);
-	public static final byte MOVE_LEFT  = (1 << 2);
-	public static final byte MOVE_DOWN  = (1 << 3);
+	public static final byte MOVE_RIGHT = 0;
+	public static final byte MOVE_UP    = 1;
+	public static final byte MOVE_LEFT  = 2;
+	public static final byte MOVE_DOWN  = 3;
 	public static final String moveLetters = "RULD";
 
 	/**
@@ -37,7 +38,7 @@ public class BoardConnectivity {
 
 		for(int i=0; i<Board.rows+2; i++) {
 			for(int j=0; j<Board.cols+2; j++) {
-				connectivity[i][j] = 0;
+				connectivity[i][j] = NO_MOVE;
 			}
 		}
 
@@ -67,8 +68,8 @@ public class BoardConnectivity {
 				byte row = (byte) (currenPos.row + rowMask[i]);
 				byte col = (byte) (currenPos.col + colMask[i]);
 
-				if(!state.isOccupied(row, col) && connectivity[row][col] == 0) {
-					connectivity[row][col] =  (byte) (1 << i);
+				if(!state.isOccupied(row, col) && connectivity[row][col] == NO_MOVE) {
+					connectivity[row][col] =  i;
 
 					BoardPosition bp = new BoardPosition(row, col);
 					positionsToExpand.add(bp);
@@ -78,7 +79,7 @@ public class BoardConnectivity {
 	}
 	
 	public boolean isReachable(byte row, byte col) {
-		return connectivity[row][col] != 0;
+		return connectivity[row][col] != NO_MOVE;
 	}
 
 	@Override
@@ -131,7 +132,7 @@ public class BoardConnectivity {
 				case MOVE_NULL:
 					result += "X";
 					break;
-				case 0:
+				case NO_MOVE:
 					result += "-";
 					break;
 
