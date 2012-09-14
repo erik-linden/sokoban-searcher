@@ -5,14 +5,14 @@ public class Heuristics {
 		int distance = 0;
 		
 		for(BoardPosition boxPos : state.boxPositions) {
-			int minDist = 0;
+			int minDist = Integer.MAX_VALUE;
 			
 			for(BoardPosition goalPos : Board.goalPositions) {
 				int currDist = 0;
 				currDist += Math.abs(boxPos.row-goalPos.row);
 				currDist += Math.abs(boxPos.col-goalPos.col);
 				
-				if(currDist > minDist) {
+				if(currDist < minDist) {
 					minDist = currDist;
 				}
 			}
@@ -20,6 +20,6 @@ public class Heuristics {
 			distance += minDist;
 		}
 		
-		return -distance;
+		return distance;
 	}
 }

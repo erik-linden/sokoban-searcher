@@ -48,7 +48,7 @@ public class State  implements Comparable<State> {
 	 * @param move the move made to push the box, from <code>BoardConnectivity</code>
 	 */
 	public State(State parent, BoardPosition oldBoxPosition, byte move) {
-		this.parent	 	= parent;
+		this.parent	 		= parent;
 		this.board 			= parent.board;
 		this.playerPosition = new BoardPosition(oldBoxPosition);
 		this.lastMove 		= move;
@@ -252,7 +252,7 @@ public class State  implements Comparable<State> {
 	public int compareTo(State other) {
 		if (this.heuristicValue == other.heuristicValue)
             return 0;
-        else if (this.heuristicValue < other.heuristicValue)
+        else if (this.heuristicValue > other.heuristicValue)
             return 1;
         else
             return -1;

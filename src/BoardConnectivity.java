@@ -25,7 +25,7 @@ public class BoardConnectivity {
 	 */
 	public static final byte[] colMask = {1, 0, -1, 0};
 
-	private final byte[][] connectivity;
+	private byte[][] connectivity;
 
 	/**
 	 * Constructs the connectivity matrix for the 
