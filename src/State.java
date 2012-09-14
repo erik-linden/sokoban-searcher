@@ -134,15 +134,16 @@ public class State  implements Comparable<State> {
 	 * This should conform to the definition of state equality.
 	 */
 	private void setHash() {
-		for(byte i=0; i<Board.rows+2; i++) {
-			for(byte j=0; j<Board.cols+2; j++) {
+		for(byte i=1; i<=Board.rows; i++) {
+			for(byte j=1; j<=Board.cols; j++) {
 				if(connectivity.isReachable(i,j)) {
 					hash ^= Board.zValues[i][j];
 				}
 			}
 		}
 		for (BoardPosition bp : boxPositions) {
-			hash ^= Board.zValues[bp.row][bp.col];
+			hash ^= (Board.zValues[bp.row][bp.col] << 1);
+//			System.out.println("R: "+bp.row+" C: "+bp.col);
 		}
 	}
 	

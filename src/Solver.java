@@ -6,7 +6,8 @@ import java.util.Vector;
 public class Solver {
 	
 	public static String solve(Vector<String> lines) {
-		new Board(lines);
+		Board board = new Board(lines);
+		System.out.println(board.toString());
 		
 		State solvedState = aStar();
 		String revSoloution = solvedState.backtrackSolution();
@@ -24,7 +25,8 @@ public class Solver {
 		while(!nodesLeft.isEmpty()) {
 			State parent = nodesLeft.poll();
 			visited.add(parent);
-//			System.out.println(parent.toString());
+			System.out.println(parent.heuristicValue);
+			System.out.println(parent.toString());
 			
 			if(parent.isSolved()) {
 				return parent;
