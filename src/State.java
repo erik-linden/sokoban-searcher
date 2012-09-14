@@ -124,7 +124,7 @@ public class State  implements Comparable<State> {
 		BoardPosition endPos = new BoardPosition(currRow, currCol);
 		BoardPosition startPos = new BoardPosition(startRow, startCol);
 		
-		result += parent.connectivity.backtrackPath(endPos, startPos);
+		result += parent.connectivity.backtrackPathString(endPos, startPos);
 		
 		result += parent.backtrackSolution();
 		

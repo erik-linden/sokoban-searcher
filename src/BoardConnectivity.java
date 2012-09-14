@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Vector;
 
 
 /**
@@ -78,8 +79,8 @@ public class BoardConnectivity {
 		}
 	}
 	
-	public String backtrackPath(BoardPosition endPos, BoardPosition startPos) {
-		String result = "";
+	public Vector<Integer> backtrackPathMoves(BoardPosition endPos, BoardPosition startPos) {
+		Vector<Integer> movesList = new Vector<Integer>();
 		
 		byte row = (byte) endPos.row;
 		byte col = (byte) endPos.col;
@@ -94,13 +95,25 @@ public class BoardConnectivity {
 			if(move==NO_MOVE) {
 				throw new RuntimeException("Backtracking led to unreachable square!");
 			}
-			
-			result += MOVE_CHARS[move];
-			
+						
 			row -= rowMask[move];
 			col -= colMask[move];
 			
+			movesList.add((int) move);
+			
 			move = connectivity[row][col];
+		}
+		
+		return movesList;
+	}
+	
+	public String backtrackPathString(BoardPosition endPos, BoardPosition startPos) {
+		String result = "";
+		
+		Vector<Integer> movesList = backtrackPathMoves(endPos, startPos);
+		
+		for(int move : movesList) {
+			result += MOVE_CHARS[move];
 		}
 		
 		return result;

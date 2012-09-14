@@ -10,9 +10,8 @@ public class Solver {
 		System.out.println(board.toString());
 		
 		State solvedState = aStar();
-		Guireplay player = new Guireplay(solvedState);
-		
 		String revSoloution = solvedState.backtrackSolution();
+		new Guireplay(solvedState);
 		
 		return  new StringBuffer(revSoloution).reverse().toString();
 	}
