@@ -91,8 +91,9 @@ public class State  implements Comparable<State> {
 				
 				boolean playerPosReachable   = connectivity.isReachable(playerRow, playerCol);
 				boolean pushTargetUnOccupied = !isOccupied(pushedBoxRow, pushedBoxCol);
+				boolean targetNotDead		 = !board.deadAt(pushedBoxRow, pushedBoxCol);
 						
-				if(playerPosReachable && pushTargetUnOccupied) {
+				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
 					byte move = i;
 					
 					childStates.add(new State(this, boxPos, move));
@@ -222,7 +223,10 @@ public class State  implements Comparable<State> {
 		
 		for(byte i=1; i<=Board.rows; i++) {
 			for(byte j=1; j<=Board.cols; j++) {
-				if(boxAt(i, j)){
+				if(boxAt(i, j) && Board.goalAt(i, j)){
+					result += "*";
+				}
+				else if(boxAt(i, j)){
 					result += "$";
 				}
 				else if(playerAt(i, j)) {
