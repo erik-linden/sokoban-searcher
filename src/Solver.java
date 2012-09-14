@@ -28,10 +28,6 @@ public class Solver {
 			State parent = nodesLeft.poll();
 			visited.add(parent);
 			
-			if(parent.isSolved()) {
-				System.out.println("Solved in "+parent.nPushes+" pushes.");
-				return parent;
-			}
 			
 			parent.getPushStates(childStates);
 			
@@ -45,6 +41,10 @@ public class Solver {
 					nodesLeft.add(child);
 				}
 				
+				if(child.isSolved()) {
+				    System.out.println("Solved in "+child.nPushes+" pushes.");
+				    return parent;
+				}
 			}
 		}
 		
