@@ -9,7 +9,6 @@ import java.util.LinkedList;
  *
  */
 public class State  implements Comparable<State> {
-	public Board board;
 	public BoardPosition playerPosition;
 	public Collection<BoardPosition> boxPositions;
 	
@@ -31,7 +30,6 @@ public class State  implements Comparable<State> {
 	 */
 	public State(Board board, BoardPosition playerPosition,
 			Collection<BoardPosition> boxPositions) {
-		this.board = board;
 		this.playerPosition = playerPosition;
 		this.boxPositions 	= boxPositions;
 		this.parent 		= null;
@@ -52,7 +50,6 @@ public class State  implements Comparable<State> {
 	 */
 	public State(State parent, BoardPosition oldBoxPosition, byte move) {
 		this.parent	 		= parent;
-		this.board 			= parent.board;
 		this.playerPosition = new BoardPosition(oldBoxPosition);
 		this.lastMove 		= move;
 		this.nPushes		= parent.nPushes+1;
@@ -94,7 +91,7 @@ public class State  implements Comparable<State> {
 				
 				boolean playerPosReachable   = connectivity.isReachable(playerRow, playerCol);
 				boolean pushTargetUnOccupied = !isOccupied(pushedBoxRow, pushedBoxCol);
-				boolean targetNotDead		 = !board.deadAt(pushedBoxRow, pushedBoxCol);
+				boolean targetNotDead		 = !Board.deadAt(pushedBoxRow, pushedBoxCol);
 						
 				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
 					byte move = i;
