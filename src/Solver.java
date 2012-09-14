@@ -22,7 +22,7 @@ public class Solver {
 		PriorityQueue<State> nodesLeft = new PriorityQueue<State>();
 		Vector<State> childStates = new Vector<State>();
 		
-		nodesLeft.add(Board.state);
+		nodesLeft.add(Board.initialState);
 		
 		while(!nodesLeft.isEmpty()) {
 			State parent = nodesLeft.poll();
