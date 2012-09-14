@@ -110,7 +110,7 @@ public class State  implements Comparable<State> {
 			return result;
 		}
 		
-		result += BoardConnectivity.moveLetters.charAt(lastMove);
+		result += BoardConnectivity.MOVE_CHARS[lastMove];
 		
 		byte currRow = (byte) (playerPosition.row - BoardConnectivity.rowMask[lastMove]);
 		byte currCol = (byte) (playerPosition.col - BoardConnectivity.colMask[lastMove]);

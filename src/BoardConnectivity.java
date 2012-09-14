@@ -14,7 +14,7 @@ public class BoardConnectivity {
 	public static final byte MOVE_UP    = 1;
 	public static final byte MOVE_LEFT  = 2;
 	public static final byte MOVE_DOWN  = 3;
-	public static final String moveLetters = "RULD";
+	public static final char[] MOVE_CHARS = new char[]{'R', 'U', 'L', 'D'};
 
 	/**
 	 * Mask used to look at adjacent squares.
@@ -95,7 +95,7 @@ public class BoardConnectivity {
 				throw new RuntimeException("Backtracking led to unreachable square!");
 			}
 			
-			result += moveLetters.charAt(move);
+			result += MOVE_CHARS[move];
 			
 			row -= rowMask[move];
 			col -= colMask[move];
