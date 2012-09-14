@@ -44,7 +44,7 @@ public class Board {
 	/**
 	 * The initial state of the board.
 	 */
-	public static State state;
+	public static State initialState;
 
 	/**
 	 * Constructs a board using an vector of
@@ -112,7 +112,7 @@ public class Board {
 
 		markDead();
 
-		state = new State(this, playerPosition, boxPositions);
+		initialState = new State(this, playerPosition, boxPositions);
 	}
 
 	public static boolean floorAt(byte row, byte col) {
