@@ -8,6 +8,8 @@ public class Solver {
 	
 	public static String solve(ArrayList<String> lines) {
 		Board board = new Board(lines);
+
+		System.out.println("Board to solve:");
 		System.out.println(board.toString());
 		
 		State solvedState = aStar();

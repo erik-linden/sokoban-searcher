@@ -16,6 +16,7 @@ public class BoardTester {
 		
 		final int file = 0;
 		String fileName = null;
+		String level = ";LEVEL 1";
 		
 		switch(file) {
 		case 0:
@@ -26,10 +27,10 @@ public class BoardTester {
 			break;
 		}
 		
-		FileInputStream fstream = new FileInputStream(new File("data", fileName));
+		BufferedReader br =
+				new BufferedReader(new InputStreamReader(new DataInputStream(
+						new FileInputStream(new File("data", fileName)))));
 
-		DataInputStream in = new DataInputStream(fstream);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine;
 
 		strLine = br.readLine();
@@ -51,7 +52,7 @@ public class BoardTester {
 			}
 			break;
 		case 1:
-			while(0 != strLine.compareTo(";LEVEL 2080")) {
+			while(strLine.compareTo(level) != 0) {
 				strLine = br.readLine();
 			}
 						
@@ -65,11 +66,12 @@ public class BoardTester {
 			break;
 		}
 		
+		br.close();
 		
 		String sol = Solver.solve(lines);
-        
+
+		System.out.println("Solution:");
         System.out.println(sol);
-        br.close();
 	}
 
 }
