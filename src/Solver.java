@@ -43,7 +43,7 @@ public class Solver {
 				
 				if(child.isSolved()) {
 				    System.out.println("Solved in "+child.nPushes+" pushes.");
-				    return parent;
+				    return child;
 				}
 			}
 		}
