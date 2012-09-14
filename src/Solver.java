@@ -10,6 +10,8 @@ public class Solver {
 		System.out.println(board.toString());
 		
 		State solvedState = aStar();
+		Guireplay player = new Guireplay(solvedState);
+		
 		String revSoloution = solvedState.backtrackSolution();
 		
 		return  new StringBuffer(revSoloution).reverse().toString();
@@ -25,16 +27,20 @@ public class Solver {
 		while(!nodesLeft.isEmpty()) {
 			State parent = nodesLeft.poll();
 			visited.add(parent);
-			System.out.println(parent.heuristicValue);
-			System.out.println(parent.toString());
+//			System.out.println(parent.heuristicValue);
+//			System.out.println(parent.toString());
 			
 			if(parent.isSolved()) {
+				System.out.println("Solved in "+parent.nPushes+" pushes.");
 				return parent;
 			}
 			
 			parent.getPushStates(childStates);
 			
 			for(State child : childStates) {
+//				System.out.println((int) child.hash);
+//				System.out.println(child.connectivity.toString());
+				
 				if(visited.contains(child)) {
 					continue;
 				}

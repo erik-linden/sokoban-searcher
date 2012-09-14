@@ -17,14 +17,15 @@ public class BoardTester {
 
 		strLine = br.readLine();
 
-		while(0 != strLine.compareTo(";LEVEL 1")) {
+		while(0 != strLine.compareTo("; 110")) {
 			strLine = br.readLine();
 		}
 		
 		Vector<String> lines = new Vector<String>();
 		
 		strLine = br.readLine();
-		while(strLine.charAt(0) != ';') {
+		strLine = br.readLine();
+		while(strLine.length() != 0) {
 			lines.add(strLine);
 			System.out.println(strLine);
 			

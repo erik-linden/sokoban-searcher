@@ -8,14 +8,15 @@ import java.util.Vector;
  *
  */
 public class State  implements Comparable<State> {
-	public final Board board;
-	public final BoardPosition playerPosition;
-	public final Vector<BoardPosition> boxPositions;
+	public Board board;
+	public BoardPosition playerPosition;
+	public Vector<BoardPosition> boxPositions;
 	
-	public final BoardConnectivity connectivity;
-	public final State parent;
-	public final byte lastMove;
-	public final int heuristicValue;
+	public BoardConnectivity connectivity;
+	public State parent;
+	public byte lastMove;
+	public int nPushes;
+	public int heuristicValue;
 	
 	public long hash = 0;
 	
@@ -35,6 +36,7 @@ public class State  implements Comparable<State> {
 		this.parent 		= null;
 		this.connectivity 	= new BoardConnectivity(this);
 		this.lastMove 		= BoardConnectivity.MOVE_NULL;
+		this.nPushes		= 0;
 		
 		setHash();
 		this.heuristicValue = Heuristics.calculateHeuristic(this);
@@ -52,6 +54,7 @@ public class State  implements Comparable<State> {
 		this.board 			= parent.board;
 		this.playerPosition = new BoardPosition(oldBoxPosition);
 		this.lastMove 		= move;
+		this.nPushes		= parent.nPushes+1;
 		
 		Vector<BoardPosition> bpv = new Vector<BoardPosition>();
 		for(BoardPosition bp : parent.boxPositions) {
@@ -69,7 +72,7 @@ public class State  implements Comparable<State> {
 		
 		connectivity = new BoardConnectivity(this);
 		
-		setHash();
+		this.setHash();
 		this.heuristicValue = Heuristics.calculateHeuristic(this);
 	}
 	
@@ -141,10 +144,12 @@ public class State  implements Comparable<State> {
 				}
 			}
 		}
+//		System.out.println(hash);
 		for (BoardPosition bp : boxPositions) {
 			hash ^= (Board.zValues[bp.row][bp.col] << 1);
 //			System.out.println("R: "+bp.row+" C: "+bp.col);
 		}
+//		System.out.println(hash+"\n");
 	}
 	
 	public boolean isSolved() {
