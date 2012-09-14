@@ -9,7 +9,7 @@ public class BoardTester {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		FileInputStream fstream = new FileInputStream("D:\\Desktop\\all.slc");
+		FileInputStream fstream = new FileInputStream(new File("data", "all.slc"));
 
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
