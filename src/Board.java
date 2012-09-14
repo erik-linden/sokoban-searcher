@@ -131,6 +131,31 @@ public class Board {
 		return (board[row][col] & DEAD) != 0;
 	}
 
+    /**
+     * Marks dead-end squares, from which a box cannot be moved to a goal.
+     *
+     * Example (view in fixed-width font!):
+     * <pre><code>
+     * #########
+     * #       #  #####
+     * #       ####   #
+     * #              #
+     * #   G          #
+     * #              #
+     * ################
+     * <code></pre>
+     * The above example, where <code>G</code> marks a goal, would be marked as:
+     * <pre><code>
+     * #########
+     * #DDDDDDD#  #####
+     * #DDDDDDD####DDD#
+     * #D            D#
+     * #D  G         D#
+     * #DDDDDDDDDDDDDD#
+     * ################
+     * </code></pre>
+     * Where <code>D</code> marks a dead end.
+     */
 	private static void markDead() {
 		for (byte row = 1; row<=rows; row++) {
 			for (byte col = 1; col<=cols; col++) {
@@ -143,6 +168,9 @@ public class Board {
 					if (goalAt(row, col)) {
 						continue;
 					}
+
+					// It's a non-goal corner => dead end
+					board[row][col] |= DEAD;
 
 					byte rInc = 0, cInc = 0;
 					switch (isCornered) {
@@ -163,8 +191,6 @@ public class Board {
 						cInc = 1;
 						break;
 					}
-
-					board[row][col] |= DEAD;
 
 					byte currCol = col;
 					while (currCol>0 && currCol<=cols) {
