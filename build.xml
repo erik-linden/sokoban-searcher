@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="sokoban-solver" default="compile" basedir=".">
+    <property name="build.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+    <property name="dist.dir" value="dist"/>
+
+    <path id="sokoban-solver.classpath">
+        <pathelement location="${build.dir}"/>
+    </path>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <copy includeemptydirs="false" todir="${build.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="sokoban-solver.classpath"/>
+    </target>
+
+    <target name="dist" depends="compile">
+        <zip destfile="${dist.dir}/TheRealGroup-sokoban.zip" basedir="${src.dir}"/>
+    </target>
+
+</project>

@@ -5,3 +5,8 @@
 *.jar
 *.war
 *.ear
+
+# Auto-generated files and directories #
+/bin
+/dist
+
