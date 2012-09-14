@@ -9,7 +9,7 @@ public class BoardTester {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		FileInputStream fstream = new FileInputStream("C:\\Users\\Erik\\Desktop\\m1.txt");
+		FileInputStream fstream = new FileInputStream("m1.txt");
 
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -17,7 +17,7 @@ public class BoardTester {
 
 		strLine = br.readLine();
 
-		while(0 != strLine.compareTo("; 110")) {
+		while(0 != strLine.compareTo("; 108")) {
 			strLine = br.readLine();
 		}
 		

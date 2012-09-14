@@ -107,7 +107,6 @@ public class State  implements Comparable<State> {
 	
 	public String backtrackSolution() {
 		String result = "";
-		System.out.println(toString());
 		
 		if(lastMove == BoardConnectivity.MOVE_NULL) {
 			return result;
@@ -144,12 +143,9 @@ public class State  implements Comparable<State> {
 				}
 			}
 		}
-//		System.out.println(hash);
 		for (BoardPosition bp : boxPositions) {
 			hash ^= (Board.zValues[bp.row][bp.col] << 1);
-//			System.out.println("R: "+bp.row+" C: "+bp.col);
 		}
-//		System.out.println(hash+"\n");
 	}
 	
 	public boolean isSolved() {

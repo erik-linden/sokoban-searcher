@@ -26,8 +26,6 @@ public class Solver {
 		while(!nodesLeft.isEmpty()) {
 			State parent = nodesLeft.poll();
 			visited.add(parent);
-//			System.out.println(parent.heuristicValue);
-//			System.out.println(parent.toString());
 			
 			if(parent.isSolved()) {
 				System.out.println("Solved in "+parent.nPushes+" pushes.");
@@ -37,8 +35,6 @@ public class Solver {
 			parent.getPushStates(childStates);
 			
 			for(State child : childStates) {
-//				System.out.println((int) child.hash);
-//				System.out.println(child.connectivity.toString());
 				
 				if(visited.contains(child)) {
 					continue;
@@ -46,8 +42,6 @@ public class Solver {
 				
 				if(!nodesLeft.contains(child)) {
 					nodesLeft.add(child);
-//					System.out.println(child.toString());
-//					System.out.println("");
 				}
 				
 			}
