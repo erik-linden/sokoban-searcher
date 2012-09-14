@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Queue;
 
 
 /**
@@ -51,7 +52,7 @@ public class BoardConnectivity {
 	 * @param state State checked for connectivity
 	 */
 	private void setConnectivity(State state) {
-		LinkedList<BoardPosition> positionsToExpand = new LinkedList<BoardPosition>();
+		Queue<BoardPosition> positionsToExpand = new LinkedList<BoardPosition>();
 
 		positionsToExpand.add(state.playerPosition);
 		byte playerRow = state.playerPosition.row;
@@ -62,7 +63,7 @@ public class BoardConnectivity {
 
 		while(!positionsToExpand.isEmpty()) {
 
-			BoardPosition currenPos = positionsToExpand.pop();
+			BoardPosition currenPos = positionsToExpand.poll();
 
 			for(byte i=0; i<4; i++) {
 				byte row = (byte) (currenPos.row + rowMask[i]);
