@@ -1,11 +1,12 @@
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Vector;
-
 
 public class Solver {
 	
-	public static String solve(Vector<String> lines) {
+	public static String solve(ArrayList<String> lines) {
 		Board board = new Board(lines);
 		System.out.println(board.toString());
 		
@@ -20,7 +21,7 @@ public class Solver {
 	private static State aStar() {
 		HashSet<State> visited = new HashSet<State>();
 		PriorityQueue<State> nodesLeft = new PriorityQueue<State>();
-		Vector<State> childStates = new Vector<State>();
+		List<State> childStates = new LinkedList<State>();
 		
 		nodesLeft.add(Board.initialState);
 		

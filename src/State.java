@@ -1,4 +1,5 @@
-import java.util.Vector;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Class that hold the dynamic elements of a board and
@@ -10,7 +11,7 @@ import java.util.Vector;
 public class State  implements Comparable<State> {
 	public Board board;
 	public BoardPosition playerPosition;
-	public Vector<BoardPosition> boxPositions;
+	public Collection<BoardPosition> boxPositions;
 	
 	public BoardConnectivity connectivity;
 	public State parent;
@@ -29,7 +30,7 @@ public class State  implements Comparable<State> {
 	 * @param boxPositions the boxes' initial positions
 	 */
 	public State(Board board, BoardPosition playerPosition,
-			Vector<BoardPosition> boxPositions) {
+			Collection<BoardPosition> boxPositions) {
 		this.board = board;
 		this.playerPosition = playerPosition;
 		this.boxPositions 	= boxPositions;
@@ -56,13 +57,12 @@ public class State  implements Comparable<State> {
 		this.lastMove 		= move;
 		this.nPushes		= parent.nPushes+1;
 		
-		Vector<BoardPosition> bpv = new Vector<BoardPosition>();
+		boxPositions = new LinkedList<BoardPosition>();
 		for(BoardPosition bp : parent.boxPositions) {
 			if(!bp.equals(oldBoxPosition)) {
-				bpv.add(new BoardPosition(bp));
+				boxPositions.add(new BoardPosition(bp));
 			}
 		}
-		this.boxPositions = bpv;
 		
 		byte row = (byte) (oldBoxPosition.row + BoardConnectivity.rowMask[move]);
 		byte col = (byte) (oldBoxPosition.col + BoardConnectivity.colMask[move]);
@@ -76,7 +76,7 @@ public class State  implements Comparable<State> {
 		this.heuristicValue = Heuristics.calculateHeuristic(this);
 	}
 	
-	public void getPushStates(Vector<State> childStates) {
+	public void getPushStates(Collection<State> childStates) {
 		childStates.clear();
 		
 		for(BoardPosition boxPos : boxPositions) {
@@ -211,12 +211,10 @@ public class State  implements Comparable<State> {
 	 * @param state
 	 * @return
 	 */
-	private boolean equals(State state) {
-		boolean hasSameBoxPos = state.boxPositions.containsAll(this.boxPositions);
-		boolean hasSameConnectivity = state.connectivity.equals(this.connectivity);
-		
-		return hasSameBoxPos && hasSameConnectivity;
-	}
+    private boolean equals(State state) {
+        return state.boxPositions.containsAll(this.boxPositions)
+                && state.connectivity.equals(this.connectivity);
+    }
 
 	@Override
 	public int hashCode() {

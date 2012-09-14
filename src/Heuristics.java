@@ -8,13 +8,9 @@ public class Heuristics {
 			int minDist = Integer.MAX_VALUE;
 			
 			for(BoardPosition goalPos : Board.goalPositions) {
-				int currDist = 0;
-				currDist += Math.abs(boxPos.row-goalPos.row);
-				currDist += Math.abs(boxPos.col-goalPos.col);
-				
-				if(currDist < minDist) {
-					minDist = currDist;
-				}
+			    minDist = Math.min(minDist,
+			            Math.abs(boxPos.row - goalPos.row)
+			            + Math.abs(boxPos.col - goalPos.col));
 			}
 			
 			distance += minDist;
