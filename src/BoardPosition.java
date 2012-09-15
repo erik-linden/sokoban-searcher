@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 
 /**
  * Wrapper class that holds the row coordinate 
@@ -9,10 +11,10 @@
 public class BoardPosition {
 	
 	/** Row coordinate */
-	public final byte row;
+	public byte row;
 	
 	/** Column coordinate */
-	public final byte col;
+	public byte col;
 	
 	/**
 	 * Construct a <code>BoardPosition</code> from
@@ -29,6 +31,25 @@ public class BoardPosition {
 	public BoardPosition(BoardPosition bp) {
 		this.row = bp.row;
 		this.col = bp.col;
+	}
+	
+	public BoardPosition makeChild(byte move) {
+		BoardPosition child = new BoardPosition(this.row, this.col);
+		
+		child.row += BoardConnectivity.rowMask[move];
+		child.col += BoardConnectivity.colMask[move];
+		
+		return child;
+	}
+	
+	public Vector<BoardPosition> makeAllChildren() {
+		Vector<BoardPosition> children = new Vector<BoardPosition>(4);
+		
+		for(byte i=0; i<4; i++) {
+			children.add(makeChild(i));
+		}
+		
+		return children;
 	}
 	
 	@Override
