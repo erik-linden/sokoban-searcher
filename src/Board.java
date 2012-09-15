@@ -131,7 +131,7 @@ public class Board {
 		return board[row][col] == WALL;
 	}
 
-	public final boolean deadAt(byte row, byte col) {
+	public static boolean deadAt(byte row, byte col) {
 		return (board[row][col] & DEAD) != 0;
 	}
 

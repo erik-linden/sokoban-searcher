@@ -94,7 +94,7 @@ public class State  implements Comparable<State> {
 				
 				boolean playerPosReachable   = connectivity.isReachable(playerRow, playerCol);
 				boolean pushTargetUnOccupied = !isOccupied(pushedBoxRow, pushedBoxCol);
-				boolean targetNotDead		 = !board.deadAt(pushedBoxRow, pushedBoxCol);
+				boolean targetNotDead		 = !Board.deadAt(pushedBoxRow, pushedBoxCol);
 						
 				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
 					byte move = i;
