@@ -150,7 +150,7 @@ public class Board {
      * <pre><code>
      * #########
      * #DDDDDDD#  #####
-     * #DDDDDDD####DDD#
+     * #D      ####DDD#
      * #D            D#
      * #D  G         D#
      * #DDDDDDDDDDDDDD#
