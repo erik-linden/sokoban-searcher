@@ -42,6 +42,10 @@ public class Board {
 	 */
 	public static Vector<BoardPosition> goalPositions = new Vector<BoardPosition>();
 	/**
+	 * Vector of goal positions.
+	 */
+	public static byte nGoals = 0;
+	/**
 	 * The initial state of the board.
 	 */
 	public static State initialState;
@@ -109,9 +113,9 @@ public class Board {
 				}
 			}
 		}
+		nGoals = (byte) goalPositions.size();
 
 		markDead();
-
 		initialState = new State(this, playerPosition, boxPositions);
 	}
 
