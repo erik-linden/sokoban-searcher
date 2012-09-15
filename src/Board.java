@@ -1,5 +1,7 @@
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Random;
-import java.util.Vector;
 
 /**
  * Class used to initialize a board configuration. It contains 
@@ -40,7 +42,7 @@ public class Board {
 	/**
 	 * Vector of goal positions.
 	 */
-	public static Vector<BoardPosition> goalPositions = new Vector<BoardPosition>();
+	public static Collection<BoardPosition> goalPositions = new LinkedList<BoardPosition>();
 	/**
 	 * Vector of goal positions.
 	 */
@@ -56,7 +58,7 @@ public class Board {
 	 * 
 	 * @param lines Lines from the server
 	 */
-	public Board(Vector<String> lines) {
+	public Board(ArrayList<String> lines) {
 		rows = (byte) lines.size();
 		cols = (byte) 0;
 
@@ -73,7 +75,7 @@ public class Board {
 		zValues = new long[rows+2][cols+2];
 
 		BoardPosition playerPosition = null;
-		Vector<BoardPosition> boxPositions = new Vector<BoardPosition>();
+		Collection<BoardPosition> boxPositions = new LinkedList<BoardPosition>();
 
 		Random random = new Random();
 		for (byte i=1; i<=rows; i++) {
@@ -131,7 +133,8 @@ public class Board {
 		return board[row][col] == WALL;
 	}
 
-	public static boolean deadAt(byte row, byte col) {
+
+	public static final boolean deadAt(byte row, byte col) {
 		return (board[row][col] & DEAD) != 0;
 	}
 
@@ -152,7 +155,7 @@ public class Board {
      * <pre><code>
      * #########
      * #DDDDDDD#  #####
-     * #DDDDDDD####DDD#
+     * #D      ####DDD#
      * #D            D#
      * #D  G         D#
      * #DDDDDDDDDDDDDD#

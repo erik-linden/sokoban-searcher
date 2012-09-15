@@ -1,6 +1,8 @@
-import java.io.*;
-import java.net.*;
-import java.util.Vector;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client {
 
@@ -26,7 +28,7 @@ public class Client {
 			//read number of rows
 			int lNumRows=Integer.parseInt(lLine);
 
-			Vector<String> lines = new Vector<String>();
+			ArrayList<String> lines = new ArrayList<String>();
 			System.out.println("From server:");
 			for(int i=0;i<lNumRows;i++)
 			{
