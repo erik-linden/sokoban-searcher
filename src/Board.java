@@ -74,6 +74,7 @@ public class Board {
 
 		BoardPosition playerPosition = null;
 		Vector<BoardPosition> boxPositions = new Vector<BoardPosition>();
+		goalPositions.clear();
 
 		Random random = new Random();
 		for (byte i=1; i<=rows; i++) {

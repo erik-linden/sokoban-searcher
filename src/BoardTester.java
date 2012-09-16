@@ -62,7 +62,7 @@ public class BoardTester {
 		}
 		
 		
-		String sol = Solver.solve(lines);
+		String sol = Solver.solve(lines, new Deadline(30000));
         
         System.out.println(sol);
         br.close();

@@ -1,4 +1,3 @@
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -8,13 +7,15 @@ import java.util.Vector;
 
 public class Solver {
 
-	public static String solve(Vector<String> lines) {
+	public static String solve(Vector<String> lines, Deadline deadline) {
 		Board board = new Board(lines);
-		System.out.println(board.toString());
 
-		State solvedState = idaStar();
+		State solvedState = idaStar(deadline);
+		if(solvedState == null) {
+			return "";
+		}
 		String revSoloution = solvedState.backtrackSolution();
-		new Guireplay(solvedState);
+//		new Guireplay(solvedState);
 
 		return  new StringBuffer(revSoloution).reverse().toString();
 	}
@@ -53,7 +54,7 @@ public class Solver {
 		return null;
 	}
 
-	private static State idaStar() {
+	private static State idaStar(Deadline deadline) {
 		HashSet<State> visited = new HashSet<State>();
 		Stack<State> nodesLeft = new Stack<State>();
 		Vector<State> childStates = new Vector<State>();
@@ -61,19 +62,24 @@ public class Solver {
 		int cutoff = Board.initialState.heuristicValue;
 
 		while(true) {
+			
 			int nextCutoff = Integer.MAX_VALUE;
 			nodesLeft.push(Board.initialState);
 			visited.clear();
-			
+						
 			System.out.println("Search depth: "+cutoff);
 			while(!nodesLeft.isEmpty()) {
+				
+				if(deadline.TimeUntil()<0) {
+					return null;
+				}
+				
 				State parent = nodesLeft.pop();
 
 				if(!visited.contains(parent)) {
 					visited.add(parent);
 
 					parent.getPushStates(childStates);
-					Collections.sort(childStates);
 
 					for(State child : childStates) {
 						
