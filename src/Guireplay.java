@@ -20,8 +20,9 @@ public class Guireplay extends JFrame {
 		super("Sokoban Solution Display: ");
 
 		setVisible(true); // display this frame
+		
 
-		setBounds(100, 100, 600, 500);
+		setBounds(100, 100, Board.cols*40, Board.rows*40);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container con = this.getContentPane(); // inherit main frame
 
@@ -101,7 +102,7 @@ public class Guireplay extends JFrame {
 
 	private void pause() {
 		try {
-			Thread.sleep(20);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
