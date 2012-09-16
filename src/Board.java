@@ -28,7 +28,7 @@ public class Board {
 	/**
 	 * Random values used to calculate hash functions.
 	 */
-	public static long[][] zValues;
+	public static int[][] zValues;
 	/**
 	 * Number of board rows.
 	 */
@@ -70,7 +70,7 @@ public class Board {
 		 * Pad the sides so we don't have to worry about edge effects.
 		 */
 		board   = new byte[rows+2][cols+2];
-		zValues = new long[rows+2][cols+2];
+		zValues = new int[rows+2][cols+2];
 
 		BoardPosition playerPosition = null;
 		Vector<BoardPosition> boxPositions = new Vector<BoardPosition>();
@@ -81,7 +81,7 @@ public class Board {
 			for (byte j=1; j<=line.length(); j++) {
 				char character = line.charAt(j-1);
 
-				zValues[i][j] = random.nextLong();
+				zValues[i][j] = random.nextInt();
 				board[i][j] = FLOOR;
 				switch (character) {
 				case '#':	// wall
