@@ -32,13 +32,30 @@ public class BoardPosition {
 		this(bp.row, bp.col);
 	}
 	
+	/**
+	 * Returns a new move in the requested direction.
+	 * Returns null if move is pushing from a wall
+	 * or if being pushed into a wall or a dead square.
+	 * 
+	 * @param move
+	 * @return
+	 */
 	public BoardPosition makeChild(byte move) {
 		BoardPosition child = new BoardPosition(this.row, this.col);
 		
-		child.row += BoardConnectivity.rowMask[move];
-		child.col += BoardConnectivity.colMask[move];
+		byte revDir = (byte) ((move+2)%4);
 		
-		return child;
+		if(!Board.wallAt((byte)(child.row +BoardConnectivity.rowMask[revDir]), 
+					     (byte)(child.col +BoardConnectivity.colMask[revDir]))) {
+			child.row += BoardConnectivity.rowMask[move];
+			child.col += BoardConnectivity.colMask[move];
+			
+			if(!Board.wallAt(child.row, child.col) && !Board.deadAt(child.row, child.col)) {
+				return child;
+			}
+		}
+		
+		return null;
 	}
 	
 	public Vector<BoardPosition> makeAllChildren() {
