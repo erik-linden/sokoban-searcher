@@ -124,7 +124,7 @@ public class Board {
 		nGoals = (byte) goalPositions.size();
 
 		markDead();
-		initialState = new State(playerPosition, boxPositions);
+		initialState = new State(playerPosition, boxPositions.toArray(new BoardPosition[boxPositions.size()]));
 	}
 
 	public static boolean floorAt(byte row, byte col) {

@@ -1,5 +1,5 @@
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 
 /**
  * Class that hold the dynamic elements of a board and
@@ -10,7 +10,7 @@ import java.util.LinkedList;
  */
 public class State  implements Comparable<State> {
 	public BoardPosition playerPosition;
-	public Collection<BoardPosition> boxPositions;
+	public BoardPosition[] boxPositions;
 	
 	public BoardConnectivity connectivity;
 	public State parent;
@@ -29,9 +29,15 @@ public class State  implements Comparable<State> {
 	 * @param boxPositions the boxes' initial positions
 	 */
 	public State(BoardPosition playerPosition,
-			Collection<BoardPosition> boxPositions) {
+			BoardPosition[] boxPositions) {
 		this.playerPosition = playerPosition;
-		this.boxPositions 	= boxPositions;
+
+		/*
+		 * This copy will be a shallow copy, meaning the elements in the array
+		 * are copied by reference. This means that after this statement,
+		 * this.boxPositions[0] == boxPositions[0] will return true.
+		 */
+		this.boxPositions 	= boxPositions.clone();
 		this.parent 		= null;
 		this.connectivity 	= new BoardConnectivity(this);
 		this.lastMove 		= BoardConnectivity.MOVE_NULL;
@@ -54,18 +60,23 @@ public class State  implements Comparable<State> {
 		this.lastMove 		= move;
 		this.nPushes		= parent.nPushes+1;
 		
-		boxPositions = new LinkedList<BoardPosition>();
-		for(BoardPosition bp : parent.boxPositions) {
-			if(!bp.equals(oldBoxPosition)) {
-				boxPositions.add(bp.clone());
+		/*
+		 * This copy will be a shallow copy, meaning the elements in the array
+		 * are copied by reference. This means that after this statement,
+		 * this.boxPositions[0] == boxPositions[0] will return true. In the
+		 * following for loop, only the pushed box is updated. This is good,
+		 * since we don't need to keep copies of the same BoardPositions in
+		 * memory.
+		 */
+		boxPositions = parent.boxPositions.clone();
+		for(int i=0; i<boxPositions.length; i++) {
+			if(boxPositions[i].equals(oldBoxPosition)) {
+				byte row = (byte) (oldBoxPosition.row + BoardConnectivity.rowMask[move]);
+				byte col = (byte) (oldBoxPosition.col + BoardConnectivity.colMask[move]);
+
+				boxPositions[i] = new BoardPosition(row, col);
 			}
 		}
-		
-		byte row = (byte) (oldBoxPosition.row + BoardConnectivity.rowMask[move]);
-		byte col = (byte) (oldBoxPosition.col + BoardConnectivity.colMask[move]);
-		
-		BoardPosition newBox = new BoardPosition(row, col);
-		boxPositions.add(newBox);
 		
 		connectivity = new BoardConnectivity(this);
 		
@@ -205,7 +216,7 @@ public class State  implements Comparable<State> {
 	 * @return
 	 */
     private boolean equals(State state) {
-        return state.boxPositions.containsAll(this.boxPositions)
+        return Arrays.equals(state.boxPositions, boxPositions)
                 && state.connectivity.equals(this.connectivity);
     }
 
