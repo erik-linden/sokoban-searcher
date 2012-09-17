@@ -5,10 +5,13 @@ import java.util.Vector;
 
 public class Heuristics {
 
+	static final byte VeryFar = Byte.MAX_VALUE;
+
+	
 	public static int calculateHeuristic(State state) {
 		return bipartDist(state);
 	}
-	
+
 	private static int manhattanDist(State state) {
 		int distance = 0;
 
@@ -43,6 +46,13 @@ public class Heuristics {
 	private static int[] listGoalDistances(State state, BoardPosition start) {
 		byte[][] distMat = new byte[Board.rows+2][Board.cols+2];
 		byte goalsFound = 0;
+		
+		for(int i=1; i<=Board.rows; i++) {
+			for(int j=1; j<=Board.cols; j++) {
+				distMat[i][j] = VeryFar;
+			}
+		}
+		distMat[start.row][start.col] = 0;
 
 		Queue<BoardPosition> nodesToCheck = new LinkedList<BoardPosition>();
 		nodesToCheck.add(start);
@@ -53,22 +63,23 @@ public class Heuristics {
 
 			Vector<BoardPosition> children = current.makeAllChildren();
 			for(BoardPosition child : children) {
-				boolean notChecked = distMat[child.row][child.col]==0;
-				boolean notIsWall  = !Board.wallAt(child.row, child.col);
-				boolean notIsDead  = !Board.deadAt(child.row, child.col);
+				if(child != null) {
+					boolean notChecked = distMat[child.row][child.col]==VeryFar;
+					boolean notIsWall  = !Board.wallAt(child.row, child.col);
+					boolean notIsDead  = !Board.deadAt(child.row, child.col);
 
-				if(notChecked && notIsWall && notIsDead) {
-					distMat[child.row][child.col] = childDist;
-					nodesToCheck.add(child);
-					
-					if(Board.goalAt(child.row, child.col)) {
-						goalsFound++;
+					if(notChecked && notIsWall && notIsDead) {
+						distMat[child.row][child.col] = childDist;
+						nodesToCheck.add(child);
+
+						if(Board.goalAt(child.row, child.col)) {
+							goalsFound++;
+						}
 					}
 				}
 			}
 
 		}
-		distMat[start.row][start.col] = 0;
 
 		int[] goalDist = new int[Board.goalPositions.size()];
 		byte i = 0;
@@ -87,11 +98,11 @@ public class Heuristics {
 		for(byte i=1; i<=Board.rows; i++) {
 			for(byte j=1; j<=Board.cols; j++) {
 				byte d = distMat[i][j];
-				if(d==0) {
-					result += "|  ";
+				if(d==VeryFar) {
+					result += "|   ";
 				}
 				else{
-					result += String.format("|%2d", d);
+					result += String.format("|%3d", d);
 				}
 			}
 			result += "|\n";
