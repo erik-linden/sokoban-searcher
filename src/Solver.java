@@ -7,10 +7,10 @@ import java.util.PriorityQueue;
 public class Solver {
 	
 	public static String solve(ArrayList<String> lines) {
-		Board board = new Board(lines);
+		Board.initialize(lines);
 
 		System.out.println("Board to solve:");
-		System.out.println(board.toString());
+		System.out.println(Board.staticToString());
 		
 		State solvedState = aStar();
 		String revSoloution = solvedState.backtrackSolution();
