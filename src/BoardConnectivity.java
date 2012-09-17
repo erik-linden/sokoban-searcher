@@ -1,5 +1,5 @@
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 import java.util.Queue;
 
 
@@ -10,13 +10,6 @@ import java.util.Queue;
  *
  */
 public class BoardConnectivity {
-	public static final byte NO_MOVE    = -2;
-	public static final byte MOVE_NULL  = -1;
-	public static final byte MOVE_RIGHT = 0;
-	public static final byte MOVE_UP    = 1;
-	public static final byte MOVE_LEFT  = 2;
-	public static final byte MOVE_DOWN  = 3;
-	public static final char[] MOVE_CHARS = new char[]{'R', 'U', 'L', 'D'};
 
 	/**
 	 * Mask used to look at adjacent squares.
@@ -27,7 +20,7 @@ public class BoardConnectivity {
 	 */
 	public static final byte[] colMask = {1, 0, -1, 0};
 
-	private byte[][] connectivity;
+	private Move[][] connectivity;
 
 	/**
 	 * Constructs the connectivity matrix for the 
@@ -36,11 +29,11 @@ public class BoardConnectivity {
 	 * @param state State used for connectivity graph
 	 */
 	public BoardConnectivity(State state) {
-		connectivity = new byte[Board.rows+2][Board.cols+2];
+		connectivity = new Move[Board.rows+2][Board.cols+2];
 
 		for(int i=0; i<Board.rows+2; i++) {
 			for(int j=0; j<Board.cols+2; j++) {
-				connectivity[i][j] = NO_MOVE;
+				connectivity[i][j] = Move.NO_MOVE;
 			}
 		}
 
@@ -60,49 +53,42 @@ public class BoardConnectivity {
 		byte playerCol = state.playerPosition.col;
 
 		// The players position is reached via the null move.
-		connectivity[playerRow][playerCol] = MOVE_NULL;
+		connectivity[playerRow][playerCol] = Move.NULL;
 
 		while(!positionsToExpand.isEmpty()) {
 
 			BoardPosition currenPos = positionsToExpand.poll();
 
-			for(byte i=0; i<4; i++) {
-				byte row = (byte) (currenPos.row + rowMask[i]);
-				byte col = (byte) (currenPos.col + colMask[i]);
+			for(Move move : Move.DIRECTIONS) {
+				BoardPosition toPos = move.stepFrom(currenPos);
 
-				if(!state.isOccupied(row, col) && connectivity[row][col] == NO_MOVE) {
-					connectivity[row][col] =  i;
-
-					BoardPosition bp = new BoardPosition(row, col);
-					positionsToExpand.add(bp);
+				if(!state.isOccupied(toPos) && connectivity[toPos.row][toPos.col] == Move.NO_MOVE) {
+					connectivity[toPos.row][toPos.col] =  move;
+					positionsToExpand.add(toPos);
 				}
 			}
 		}
 	}
 	
-	public Vector<Integer> backtrackPathMoves(BoardPosition endPos, BoardPosition startPos) {
-		Vector<Integer> movesList = new Vector<Integer>();
+	public List<Move> backtrackPathMoves(BoardPosition endPos, BoardPosition startPos) {
+		List<Move> movesList = new LinkedList<Move>();
 		
-		byte row = (byte) endPos.row;
-		byte col = (byte) endPos.col;
+		BoardPosition pos = endPos;
 		
-		if(!isReachable(row, col)) {
+		if(!isReachable(pos)) {
 			throw new RuntimeException("Backtracking started on unreachable square!");
 		}
 		
-		byte move = (byte) (connectivity[row][col]);
+		Move move = connectivity[pos.row][pos.col];
 		
-		while(move!=MOVE_NULL) {
-			if(move==NO_MOVE) {
+		while(move != Move.NULL) {
+			if(move==Move.NO_MOVE) {
 				throw new RuntimeException("Backtracking led to unreachable square!");
 			}
-						
-			row -= rowMask[move];
-			col -= colMask[move];
+			movesList.add(move);
 			
-			movesList.add((int) move);
-			
-			move = connectivity[row][col];
+			pos = move.stepBack(pos);
+			move = connectivity[pos.row][pos.col];
 		}
 		
 		return movesList;
@@ -111,10 +97,10 @@ public class BoardConnectivity {
 	public String backtrackPathString(BoardPosition endPos, BoardPosition startPos) {
 		String result = "";
 		
-		Vector<Integer> movesList = backtrackPathMoves(endPos, startPos);
+		List<Move> movesList = backtrackPathMoves(endPos, startPos);
 		
-		for(int move : movesList) {
-			result += MOVE_CHARS[move];
+		for(Move m : movesList) {
+			result += m.moveChar;
 		}
 		
 		return result;
@@ -125,7 +111,7 @@ public class BoardConnectivity {
 	}
 
 	public boolean isReachable(byte row, byte col) {
-		return connectivity[row][col] != NO_MOVE;
+		return connectivity[row][col] != Move.NO_MOVE;
 	}
 
 	@Override
@@ -147,7 +133,7 @@ public class BoardConnectivity {
 	private boolean equals(BoardConnectivity bc) {
 		for(int i=1; i<=Board.rows; i++) {
 			for(int j=1; j<=Board.cols; j++) {
-				if((connectivity[i][j] == NO_MOVE) != (bc.connectivity[i][j] == NO_MOVE)) {
+				if((connectivity[i][j] == Move.NO_MOVE) != (bc.connectivity[i][j] == Move.NO_MOVE)) {
 					return false;
 				}
 			}
@@ -163,19 +149,19 @@ public class BoardConnectivity {
 		for(int i=1; i<=Board.rows; i++) {
 			for(int j=1; j<=Board.cols; j++) {
 				switch (connectivity[i][j]) {
-				case MOVE_RIGHT:
+				case RIGHT:
 					result += "R";
 					break;
-				case MOVE_UP:
+				case UP:
 					result += "U";
 					break;
-				case MOVE_LEFT:
+				case LEFT:
 					result += "L";
 					break;
-				case MOVE_DOWN:
+				case DOWN:
 					result += "D";
 					break;
-				case MOVE_NULL:
+				case NULL:
 					result += "X";
 					break;
 				case NO_MOVE:

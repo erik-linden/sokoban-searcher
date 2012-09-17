@@ -4,7 +4,7 @@ public class Heuristics {
 	public static int calculateHeuristic(State state) {
 		int distance = 0;
 		
-		for(BoardPosition boxPos : state.boxPositions) {
+		for(BoardPosition boxPos : state.getBoxPositions()) {
 			int minDist = Integer.MAX_VALUE;
 			
 			for(BoardPosition goalPos : Board.goalPositions) {

@@ -1,13 +1,12 @@
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 
 public class Guireplay extends JFrame {
 	/**
@@ -43,25 +42,16 @@ public class Guireplay extends JFrame {
 
 			State child = solutionStack.pop();
 
-			byte beforePushRow = child.playerPosition.row;
-			byte beforePushCol = child.playerPosition.col;
+			BoardPosition endPos = child.lastMove.stepBack(child.playerPosition);
+			List<Move> movesList = parent.getConnectivity().backtrackPathMoves(endPos, playerPos);
 
-			beforePushRow -= BoardConnectivity.rowMask[child.lastMove];
-			beforePushCol -= BoardConnectivity.colMask[child.lastMove];
-
-			BoardPosition endPos = new BoardPosition(beforePushRow, beforePushCol);
-			Vector<Integer> movesList = parent.connectivity.backtrackPathMoves(endPos, playerPos);
-
-			byte startRow = playerPos.row;
-			byte startCol = playerPos.col;
+			BoardPosition startPos = playerPos;
 
 			for(int i = movesList.size()-1; i >= 0; i--) {
-				startRow += BoardConnectivity.rowMask[movesList.get(i)];
-				startCol += BoardConnectivity.colMask[movesList.get(i)];
+				startPos = movesList.get(i).stepFrom(startPos);
 
-				playerPos = new BoardPosition(startRow, startCol);
 				con.removeAll();
-				con.add(getPlot(parent, playerPos));
+				con.add(getPlot(parent, startPos));
 				revalidate();
 				pause();
 			}
