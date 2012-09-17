@@ -169,7 +169,7 @@ public class State  implements Comparable<State> {
 	public byte boxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
-			if (Board.goalAt(boxCoordinate.row, boxCoordinate.col)) {
+			if (Board.goalAt(boxCoordinate)) {
 				sum++;
 			}
 		}
@@ -177,8 +177,12 @@ public class State  implements Comparable<State> {
 		return sum;
 	}
 	
-	public boolean isOccupied(byte row, byte col) {
-		return Board.wallAt(row, col) || boxAt(row, col);
+	public boolean isOccupied(BoardPosition pos) {
+		return Board.wallAt(pos) || boxAt(pos);
+	}
+
+	public boolean boxAt(BoardPosition pos) {
+		return boxAt(pos.row, pos.col);
 	}
 
 	public boolean boxAt(byte row, byte col) {
@@ -191,7 +195,11 @@ public class State  implements Comparable<State> {
 		return false;
 	}
 	
-	public boolean playerAt(byte row, byte col) {
+	public boolean playerAt(BoardPosition pos) {
+		return playerAt(pos.row, pos.col);
+	}
+
+	private boolean playerAt(byte row, byte col) {
 		if (playerPosition.row == row && playerPosition.col == col) {
 			return true;
 		}

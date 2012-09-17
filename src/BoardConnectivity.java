@@ -120,6 +120,10 @@ public class BoardConnectivity {
 		return result;
 	}
 	
+	public boolean isReachable(BoardPosition pos) {
+		return isReachable(pos.row, pos.col);
+	}
+
 	public boolean isReachable(byte row, byte col) {
 		return connectivity[row][col] != NO_MOVE;
 	}
