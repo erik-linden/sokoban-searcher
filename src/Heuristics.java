@@ -30,7 +30,7 @@ public class Heuristics {
 	}
 	
 	private static int bipartDist(State state) {
-		int[][] costs = new int[Board.nGoals][Board.nGoals];
+		int[][] costs = new int[Board.goalPositions.length][Board.goalPositions.length];
 
 		int i = 0;
 		for(BoardPosition boxPos : state.getBoxPositions()) {
@@ -56,7 +56,7 @@ public class Heuristics {
 		Queue<BoardPosition> nodesToCheck = new LinkedList<BoardPosition>();
 		nodesToCheck.add(start);
 
-		while(!nodesToCheck.isEmpty() && goalsFound<Board.nGoals) {
+		while(!nodesToCheck.isEmpty() && goalsFound<Board.goalPositions.length) {
 			BoardPosition current = nodesToCheck.poll();
 			byte childDist = (byte) (distMat[current.row][current.col]+1);
 
@@ -80,7 +80,7 @@ public class Heuristics {
 
 		}
 
-		int[] goalDist = new int[Board.goalPositions.size()];
+		int[] goalDist = new int[Board.goalPositions.length];
 		byte i = 0;
 
 		for(BoardPosition goal : Board.goalPositions) {

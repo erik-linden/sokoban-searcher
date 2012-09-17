@@ -98,16 +98,10 @@ public class State  implements Comparable<State> {
 	}
 	
 	public boolean isSolved() {
-		int boxesOnGoal = boxesOnGoals();
-	
-		if (boxesOnGoal == Board.goalPositions.size()) {
-			return true;
-		}
-
-		return false;
+		return numBoxesOnGoals() == Board.goalPositions.length;
 	}
 	
-	public byte boxesOnGoals() {
+	public byte numBoxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
 			if (Board.goalAt(boxCoordinate)) {

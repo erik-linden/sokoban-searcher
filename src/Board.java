@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,11 +43,7 @@ public class Board {
 	/**
 	 * Vector of goal positions.
 	 */
-	public static Collection<BoardPosition> goalPositions = new LinkedList<BoardPosition>();
-	/**
-	 * Vector of goal positions.
-	 */
-	public static byte nGoals = 0;
+	public static BoardPosition[] goalPositions;
 	/**
 	 * The initial state of the board.
 	 */
@@ -69,9 +66,7 @@ public class Board {
 		cols = (byte) 0;
 
 		for(String r : lines) {
-			if(r.length()>cols) {
-				cols = (byte) r.length();
-			}
+			cols = (byte) Math.max(cols, r.length());
 		}
 
 		/*
@@ -82,7 +77,7 @@ public class Board {
 
 		BoardPosition playerPosition = null;
 		Collection<BoardPosition> boxPositions = new LinkedList<BoardPosition>();
-		goalPositions.clear();
+		List<BoardPosition> goalPositions = new ArrayList<BoardPosition>();
 
 		Random random = new Random();
 		for (byte i=1; i<=rows; i++) {
@@ -122,7 +117,7 @@ public class Board {
 				}
 			}
 		}
-		nGoals = (byte) goalPositions.size();
+		Board.goalPositions = goalPositions.toArray(new BoardPosition[goalPositions.size()]);
 
 		markDead();
 		initialState = new State(playerPosition, boxPositions.toArray(new BoardPosition[boxPositions.size()]));
