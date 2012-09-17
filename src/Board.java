@@ -144,6 +144,10 @@ public class Board {
 		return deadAt(pos.row, pos.col);
 	}
 
+	public static boolean isPushableTo(BoardPosition pos) {
+		return !wallAt(pos) && !deadAt(pos);
+	}
+
 	public static boolean floorAt(byte row, byte col) {
 		return (board[row][col] & FLOOR) != 0;
 	}

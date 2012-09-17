@@ -39,7 +39,7 @@ public class BoardPosition {
 			if(!Board.wallAt(move.stepBack(this))) {
 				BoardPosition child = move.stepFrom(this);
 				
-				if(!Board.wallAt(child) && !Board.deadAt(child)) {
+				if(!Board.isPushableTo(child)) {
 					children.add(child);
 				}
 			}
