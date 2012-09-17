@@ -28,10 +28,6 @@ public class BoardPosition {
 		this.col = col;
 	}
 	
-	public BoardPosition(BoardPosition bp) {
-		this(bp.row, bp.col);
-	}
-	
 	public BoardPosition makeChild(byte move) {
 		BoardPosition child = new BoardPosition(this.row, this.col);
 		
@@ -62,5 +58,10 @@ public class BoardPosition {
 	
 	private final boolean equals(BoardPosition bp) {
 		return bp != null && this.row == bp.row && this.col == bp.col; 
+	}
+
+	@Override
+	public BoardPosition clone() {
+		return new BoardPosition(row, col);
 	}
 }
