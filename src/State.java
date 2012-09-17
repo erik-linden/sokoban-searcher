@@ -63,6 +63,10 @@ public class State  implements Comparable<State> {
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
 	}
 	
+	public boolean isSolved() {
+		return numBoxesOnGoals() == Board.goalPositions.length;
+	}
+
 	public void getPushStates(Collection<State> childStates) {
 		childStates.clear();
 
@@ -95,10 +99,6 @@ public class State  implements Comparable<State> {
 		result.append(parent.backtrackSolution());
 		
 		return result.toString();
-	}
-	
-	public boolean isSolved() {
-		return numBoxesOnGoals() == Board.goalPositions.length;
 	}
 	
 	public byte numBoxesOnGoals() {
@@ -142,26 +142,23 @@ public class State  implements Comparable<State> {
 		return false;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof State) {
-			return equals((State) obj);
-		}
-
-		return false;
+	public BoardPosition[] getBoxPositions() {
+		return boxPositions;
 	}
 
-	/**
-	 * Two states are considered equal if they have the same connectivity
-	 * and the boxes are at the same locations.
-	 * 
-	 * @param state
-	 * @return
-	 */
-    private boolean equals(State state) {
-        return Arrays.equals(state.boxPositions, boxPositions)
-                && state.getConnectivity().equals(getConnectivity());
-    }
+	public BoardConnectivity getConnectivity() {
+		if(connectivity == null) {
+			connectivity = new BoardConnectivity(this);
+		}
+		return connectivity;
+	}
+
+	public int getHeuristicValue() {
+		if(heuristicValue == null) {
+			heuristicValue = Heuristics.calculateHeuristic(this);
+		}
+		return heuristicValue;
+	}
 
 	/**
 	 * Calculates the hash value for the current state.
@@ -190,22 +187,25 @@ public class State  implements Comparable<State> {
 		return hash.intValue();
 	}
 
-	public BoardPosition[] getBoxPositions() {
-		return boxPositions;
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof State) {
+			return equals((State) obj);
+		}
+
+		return false;
 	}
 
-	public BoardConnectivity getConnectivity() {
-		if(connectivity == null) {
-			connectivity = new BoardConnectivity(this);
-		}
-		return connectivity;
-	}
-
-	public int getHeuristicValue() {
-		if(heuristicValue == null) {
-			heuristicValue = Heuristics.calculateHeuristic(this);
-		}
-		return heuristicValue;
+	/**
+	 * Two states are considered equal if they have the same connectivity
+	 * and the boxes are at the same locations.
+	 *
+	 * @param state
+	 * @return
+	 */
+	private boolean equals(State state) {
+	    return Arrays.equals(state.boxPositions, boxPositions)
+	            && state.getConnectivity().equals(getConnectivity());
 	}
 
 	@Override

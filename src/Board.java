@@ -123,74 +123,31 @@ public class Board {
 		initialState = new State(playerPosition, boxPositions.toArray(new BoardPosition[boxPositions.size()]));
 	}
 
-	public static boolean floorAt(BoardPosition pos) {
-		return floorAt(pos.row, pos.col);
-	}
-
-	public static boolean goalAt(BoardPosition pos) {
-		return goalAt(pos.row, pos.col);
-	}
-
-	public static boolean wallAt(BoardPosition pos) {
-		return wallAt(pos.row, pos.col);
-	}
-
-	public static boolean deadAt(BoardPosition pos) {
-		return deadAt(pos.row, pos.col);
-	}
-
 	/**
-	 * Alias of <code>!wallAt(pos) && !deadAt(pos)</code>.
+	 * Marks dead-end squares, from which a box cannot be moved to a goal.
 	 *
-	 * @param pos the position to check
-	 * @return exactly the same as the expression
-	 *         <code>!wallAt(pos) && !deadAt(pos)</code>.
+	 * Example (view in fixed-width font!):
+	 * <pre><code>
+	 * #########
+	 * #       #  #####
+	 * #       ####   #
+	 * #              #
+	 * #   G          #
+	 * #              #
+	 * ################
+	 * <code></pre>
+	 * The above example, where <code>G</code> marks a goal, would be marked as:
+	 * <pre><code>
+	 * #########
+	 * #DDDDDDD#  #####
+	 * #D      ####DDD#
+	 * #D            D#
+	 * #D  G         D#
+	 * #DDDDDDDDDDDDDD#
+	 * ################
+	 * </code></pre>
+	 * Where <code>D</code> marks a dead end.
 	 */
-	public static boolean isPushableTo(BoardPosition pos) {
-		return !wallAt(pos) && !deadAt(pos);
-	}
-
-	public static boolean floorAt(byte row, byte col) {
-		return (board[row][col] & FLOOR) != 0;
-	}
-
-	public static boolean goalAt(byte row, byte col) {
-		return (board[row][col] & GOAL) != 0;
-	}
-
-	public static boolean wallAt(byte row, byte col) {
-		return board[row][col] == WALL;
-	}
-
-	private static boolean deadAt(byte row, byte col) {
-		return (board[row][col] & DEAD) != 0;
-	}
-
-    /**
-     * Marks dead-end squares, from which a box cannot be moved to a goal.
-     *
-     * Example (view in fixed-width font!):
-     * <pre><code>
-     * #########
-     * #       #  #####
-     * #       ####   #
-     * #              #
-     * #   G          #
-     * #              #
-     * ################
-     * <code></pre>
-     * The above example, where <code>G</code> marks a goal, would be marked as:
-     * <pre><code>
-     * #########
-     * #DDDDDDD#  #####
-     * #D      ####DDD#
-     * #D            D#
-     * #D  G         D#
-     * #DDDDDDDDDDDDDD#
-     * ################
-     * </code></pre>
-     * Where <code>D</code> marks a dead end.
-     */
 	private static void markDead() {
 		for (byte row = 1; row<=rows; row++) {
 			for (byte col = 1; col<=cols; col++) {
@@ -262,7 +219,50 @@ public class Board {
 		}
 	}
 
-	private static byte isCornered(byte r, byte c) {
+	public static boolean floorAt(BoardPosition pos) {
+		return floorAt(pos.row, pos.col);
+	}
+
+	public static boolean goalAt(BoardPosition pos) {
+		return goalAt(pos.row, pos.col);
+	}
+
+	public static boolean wallAt(BoardPosition pos) {
+		return wallAt(pos.row, pos.col);
+	}
+
+	public static boolean deadAt(BoardPosition pos) {
+		return deadAt(pos.row, pos.col);
+	}
+
+	/**
+	 * Alias of <code>!wallAt(pos) && !deadAt(pos)</code>.
+	 *
+	 * @param pos the position to check
+	 * @return exactly the same as the expression
+	 *         <code>!wallAt(pos) && !deadAt(pos)</code>.
+	 */
+	public static boolean isPushableTo(BoardPosition pos) {
+		return !wallAt(pos) && !deadAt(pos);
+	}
+
+	public static boolean floorAt(byte row, byte col) {
+		return (board[row][col] & FLOOR) != 0;
+	}
+
+	public static boolean goalAt(byte row, byte col) {
+		return (board[row][col] & GOAL) != 0;
+	}
+
+	public static boolean wallAt(byte row, byte col) {
+		return board[row][col] == WALL;
+	}
+
+	private static boolean deadAt(byte row, byte col) {
+		return (board[row][col] & DEAD) != 0;
+	}
+
+    private static byte isCornered(byte r, byte c) {
 		if (wallAt((byte) (r-1), c) && wallAt(r, (byte) (c-1)))
 			return NW;
 		if (wallAt((byte) (r-1), c) && wallAt(r, (byte) (c+1)))
