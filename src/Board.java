@@ -144,6 +144,13 @@ public class Board {
 		return deadAt(pos.row, pos.col);
 	}
 
+	/**
+	 * Alias of <code>!wallAt(pos) && !deadAt(pos)</code>.
+	 *
+	 * @param pos the position to check
+	 * @return exactly the same as the expression
+	 *         <code>!wallAt(pos) && !deadAt(pos)</code>.
+	 */
 	public static boolean isPushableTo(BoardPosition pos) {
 		return !wallAt(pos) && !deadAt(pos);
 	}
