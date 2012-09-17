@@ -12,10 +12,10 @@ import java.util.List;
 public class BoardPosition {
 	
 	/** Row coordinate */
-	public byte row;
+	public final byte row;
 	
 	/** Column coordinate */
-	public byte col;
+	public final byte col;
 	
 	/**
 	 * Construct a <code>BoardPosition</code> from
