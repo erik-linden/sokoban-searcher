@@ -13,9 +13,9 @@ public class Client {
 		int nSolved = 0;
 		int nNotSolved = 0;
 		for(int board=1; board<=nBoard; board++) {
-			if(pArgs.length<3)
+			if(pArgs.length<2)
 			{
-				System.out.println("usage: java Client host port boardnum");
+				System.out.println("usage: java Client host port");
 				return;
 			}
 
