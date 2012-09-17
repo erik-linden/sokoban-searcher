@@ -50,14 +50,14 @@ public class State  implements Comparable<State> {
 	 */
 	public State(State parent, BoardPosition oldBoxPosition, byte move) {
 		this.parent	 		= parent;
-		this.playerPosition = new BoardPosition(oldBoxPosition);
+		this.playerPosition = oldBoxPosition.clone();
 		this.lastMove 		= move;
 		this.nPushes		= parent.nPushes+1;
 		
 		boxPositions = new LinkedList<BoardPosition>();
 		for(BoardPosition bp : parent.boxPositions) {
 			if(!bp.equals(oldBoxPosition)) {
-				boxPositions.add(new BoardPosition(bp));
+				boxPositions.add(bp.clone());
 			}
 		}
 		
