@@ -31,10 +31,19 @@ public class BoardPosition {
 	public BoardPosition makeChild(byte move) {
 		BoardPosition child = new BoardPosition(this.row, this.col);
 		
-		child.row += BoardConnectivity.rowMask[move];
-		child.col += BoardConnectivity.colMask[move];
+		byte revDir = (byte) ((move+2)%4);
 		
-		return child;
+		if(!Board.wallAt((byte)(child.row +BoardConnectivity.rowMask[revDir]), 
+					     (byte)(child.col +BoardConnectivity.colMask[revDir]))) {
+			child.row += BoardConnectivity.rowMask[move];
+			child.col += BoardConnectivity.colMask[move];
+			
+			if(!Board.wallAt(child.row, child.col) && !Board.deadAt(child.row, child.col)) {
+				return child;
+			}
+		}
+		
+		return null;
 	}
 	
 	public Vector<BoardPosition> makeAllChildren() {

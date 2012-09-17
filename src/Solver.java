@@ -1,55 +1,81 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Stack;
+import java.util.Vector;
 
 public class Solver {
-	
-	public static String solve(ArrayList<String> lines) {
+
+	public static String solve(ArrayList<String> lines, Deadline deadline) {
 		Board.initialize(lines);
 
 		System.out.println("Board to solve:");
 		System.out.println(Board.staticToString());
 		
-		State solvedState = aStar();
+		State solvedState = idaStar(deadline);
+		if(solvedState == null) {
+			return "";
+		}
 		String revSoloution = solvedState.backtrackSolution();
-		new Guireplay(solvedState);
-		
+//		new Guireplay(solvedState);
+
 		return  new StringBuffer(revSoloution).reverse().toString();
 	}
 
-	private static State aStar() {
+	private static State idaStar(Deadline deadline) {
 		HashSet<State> visited = new HashSet<State>();
-		PriorityQueue<State> nodesLeft = new PriorityQueue<State>();
-		List<State> childStates = new LinkedList<State>();
-		
-		nodesLeft.add(Board.initialState);
-		
-		while(!nodesLeft.isEmpty()) {
-			State parent = nodesLeft.poll();
-			visited.add(parent);
+		Stack<State> nodesLeft = new Stack<State>();
+		Vector<State> childStates = new Vector<State>();
+
+		int cutoff = Board.initialState.heuristicValue;
+
+		while(true) {
 			
-			if(parent.isSolved()) {
-				System.out.println("Solved in "+parent.nPushes+" pushes.");
-				return parent;
+			int nextCutoff = Integer.MAX_VALUE;
+			nodesLeft.push(Board.initialState);
+			visited.clear();
+						
+			System.out.println("Search depth: "+cutoff);
+			while(!nodesLeft.isEmpty()) {
+				
+				if(deadline.TimeUntil()<0) {
+					return null;
+				}
+				
+				State parent = nodesLeft.pop();
+
+				if(!visited.contains(parent)) {
+					visited.add(parent);
+
+					parent.getPushStates(childStates);
+
+					for(State child : childStates) {
+						
+						if(visited.contains(child)) {
+							continue;
+						}
+
+						if(child.isSolved()) {
+							System.out.println("Solved in "+child.nPushes+" pushes.");
+							return child;
+						}
+
+						int childCost = child.nPushes+child.heuristicValue;
+						if(childCost > cutoff) {
+							nextCutoff = Math.min(nextCutoff, childCost);
+						}
+						else if(!nodesLeft.contains(child)) {
+							nodesLeft.add(child);
+						}
+
+					}
+				}
 			}
-			
-			parent.getPushStates(childStates);
-			
-			for(State child : childStates) {
-				
-				if(visited.contains(child)) {
-					continue;
-				}
-				
-				if(!nodesLeft.contains(child)) {
-					nodesLeft.add(child);
-				}
-				
+			if(cutoff < nextCutoff) {
+				cutoff = nextCutoff;
+			}
+			else {
+				return null;
 			}
 		}
-		
-		return null;
 	}
 }

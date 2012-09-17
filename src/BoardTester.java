@@ -68,8 +68,8 @@ public class BoardTester {
 		
 		br.close();
 		
-		String sol = Solver.solve(lines);
-
+		String sol = Solver.solve(lines, new Deadline(30000));
+        
 		System.out.println("Solution:");
         System.out.println(sol);
 	}

@@ -18,7 +18,7 @@ public class State  implements Comparable<State> {
 	public int nPushes;
 	public int heuristicValue;
 	
-	public long hash = 0;
+	public int hash = 0;
 	
 	/**
 	 * Construct a new state from a static board, the players position and
@@ -222,7 +222,7 @@ public class State  implements Comparable<State> {
 
 	@Override
 	public int hashCode() {
-		return (int) hash;
+		return hash;
 	}
 
 	@Override
