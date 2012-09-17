@@ -1,6 +1,10 @@
-import java.io.*;
-import java.util.Vector;
-
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class BoardTester {
 
@@ -12,6 +16,7 @@ public class BoardTester {
 		
 		final int file = 0;
 		String fileName = null;
+		String level = ";LEVEL 1";
 		
 		switch(file) {
 		case 0:
@@ -22,14 +27,14 @@ public class BoardTester {
 			break;
 		}
 		
-		FileInputStream fstream = new FileInputStream(new File("data", fileName));
+		BufferedReader br =
+				new BufferedReader(new InputStreamReader(new DataInputStream(
+						new FileInputStream(new File("data", fileName)))));
 
-		DataInputStream in = new DataInputStream(fstream);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine;
 
 		strLine = br.readLine();
-		Vector<String> lines = new Vector<String>();
+		ArrayList<String> lines = new ArrayList<String>();
 		
 		switch(file) {
 		case 0:
@@ -47,7 +52,7 @@ public class BoardTester {
 			}
 			break;
 		case 1:
-			while(0 != strLine.compareTo(";LEVEL 2080")) {
+			while(strLine.compareTo(level) != 0) {
 				strLine = br.readLine();
 			}
 						
@@ -61,11 +66,12 @@ public class BoardTester {
 			break;
 		}
 		
+		br.close();
 		
 		String sol = Solver.solve(lines, new Deadline(30000));
         
+		System.out.println("Solution:");
         System.out.println(sol);
-        br.close();
 	}
 
 }

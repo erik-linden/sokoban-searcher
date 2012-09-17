@@ -29,8 +29,7 @@ public class BoardPosition {
 	}
 	
 	public BoardPosition(BoardPosition bp) {
-		this.row = bp.row;
-		this.col = bp.col;
+		this(bp.row, bp.col);
 	}
 	
 	public BoardPosition makeChild(byte move) {
