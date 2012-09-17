@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 public class Solver {
 
@@ -24,7 +25,7 @@ public class Solver {
 	private static State idaStar(Deadline deadline) {
 		HashSet<State> visited = new HashSet<State>();
 		Stack<State> nodesLeft = new Stack<State>();
-		Vector<State> childStates = new Vector<State>();
+		List<State> childStates = new LinkedList<State>();
 
 		int cutoff = Board.initialState.getHeuristicValue();
 
