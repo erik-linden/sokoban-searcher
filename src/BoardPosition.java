@@ -64,4 +64,9 @@ public class BoardPosition {
 	public BoardPosition clone() {
 		return new BoardPosition(row, col);
 	}
+
+	@Override
+	public String toString() {
+		return "(" + row + ", " + col + ")";
+	}
 }
