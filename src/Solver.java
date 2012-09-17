@@ -26,7 +26,7 @@ public class Solver {
 		Stack<State> nodesLeft = new Stack<State>();
 		Vector<State> childStates = new Vector<State>();
 
-		int cutoff = Board.initialState.heuristicValue;
+		int cutoff = Board.initialState.getHeuristicValue();
 
 		while(true) {
 			
@@ -59,7 +59,7 @@ public class Solver {
 							return child;
 						}
 
-						int childCost = child.nPushes+child.heuristicValue;
+						int childCost = child.nPushes+child.getHeuristicValue();
 						if(childCost > cutoff) {
 							nextCutoff = Math.min(nextCutoff, childCost);
 						}

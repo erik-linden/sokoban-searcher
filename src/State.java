@@ -9,17 +9,35 @@ import java.util.Collection;
  *
  */
 public class State  implements Comparable<State> {
-	public BoardPosition playerPosition;
-	public BoardPosition[] boxPositions;
 	
-	public BoardConnectivity connectivity;
-	public State parent;
-	public byte lastMove;
-	public int nPushes;
-	public int heuristicValue;
+	public final BoardPosition playerPosition;
+	public final State parent;
+	public final Move lastMove;
+	public final int nPushes;
 	
-	public int hash = 0;
+	private BoardPosition[] boxPositions;
+	private BoardConnectivity connectivity;
+	private Integer heuristicValue;
+	private Integer hash = null;
 	
+	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move) {
+		this.parent = parent;
+		this.playerPosition = playerPosition;
+		/*
+		 * This copy will be a shallow copy, meaning the elements in the array
+		 * are copied by reference. This means that after this statement,
+		 * this.boxPositions[0] == boxPositions[0] will return true, but
+		 * this.boxPositions == boxPositions will not.
+		 */
+		this.boxPositions = boxPositions.clone();
+		lastMove = move;
+		if(parent == null) {
+			nPushes = 0;
+		} else {
+			nPushes = parent.nPushes+1;
+		}
+	}
+
 	/**
 	 * Construct a new state from a static board, the players position and
 	 * a list of box positions.
@@ -30,130 +48,53 @@ public class State  implements Comparable<State> {
 	 */
 	public State(BoardPosition playerPosition,
 			BoardPosition[] boxPositions) {
-		this.playerPosition = playerPosition;
-
-		/*
-		 * This copy will be a shallow copy, meaning the elements in the array
-		 * are copied by reference. This means that after this statement,
-		 * this.boxPositions[0] == boxPositions[0] will return true.
-		 */
-		this.boxPositions 	= boxPositions.clone();
-		this.parent 		= null;
-		this.connectivity 	= new BoardConnectivity(this);
-		this.lastMove 		= BoardConnectivity.MOVE_NULL;
-		this.nPushes		= 0;
-		
-		setHash();
-		this.heuristicValue = Heuristics.calculateHeuristic(this);
+		this(null, playerPosition, boxPositions, Move.NULL);
 	}
 	
 	/**
 	 * Constructs a new state by pushing a box.
 	 * 
 	 * @param parent the parent state
-	 * @param playerPosition the original location of the box being pushed
-	 * @param move the move made to push the box, from <code>BoardConnectivity</code>
+	 * @param boxIndex the index of the box to push
+	 * @param move the {@link Move} made to push the box
 	 */
-	public State(State parent, BoardPosition oldBoxPosition, byte move) {
-		this.parent	 		= parent;
-		this.playerPosition = oldBoxPosition.clone();
-		this.lastMove 		= move;
-		this.nPushes		= parent.nPushes+1;
-		
-		/*
-		 * This copy will be a shallow copy, meaning the elements in the array
-		 * are copied by reference. This means that after this statement,
-		 * this.boxPositions[0] == boxPositions[0] will return true. In the
-		 * following for loop, only the pushed box is updated. This is good,
-		 * since we don't need to keep copies of the same BoardPositions in
-		 * memory.
-		 */
-		boxPositions = parent.boxPositions.clone();
-		for(int i=0; i<boxPositions.length; i++) {
-			if(boxPositions[i].equals(oldBoxPosition)) {
-				byte row = (byte) (oldBoxPosition.row + BoardConnectivity.rowMask[move]);
-				byte col = (byte) (oldBoxPosition.col + BoardConnectivity.colMask[move]);
-
-				boxPositions[i] = new BoardPosition(row, col);
-			}
-		}
-		
-		connectivity = new BoardConnectivity(this);
-		
-		this.setHash();
-		this.heuristicValue = Heuristics.calculateHeuristic(this);
+	public State(State parent, int boxIndex, Move move) {
+		this(parent, parent.boxPositions[boxIndex].clone(), parent.boxPositions, move);
+		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
 	}
 	
 	public void getPushStates(Collection<State> childStates) {
 		childStates.clear();
-		
-		for(BoardPosition boxPos : boxPositions) {
-			byte row = boxPos.row;
-			byte col = boxPos.col;
-			
-			for(byte i=0; i<4; i++) {
-				byte playerInd = (byte) ((i+2) % 4);
+
+		for(int boxIndex=0; boxIndex<boxPositions.length; boxIndex++) {
+			for(Move m : Move.DIRECTIONS) {
+				BoardPosition boxDestination = m.stepFrom(boxPositions[boxIndex]);
 				
-				byte pushedBoxRow = (byte) (row + BoardConnectivity.rowMask[i]);
-				byte pushedBoxCol = (byte) (col + BoardConnectivity.colMask[i]);
+				BoardPosition playerPos = m.opposite().stepFrom(boxPositions[boxIndex]);
 				
-				byte playerRow = (byte) (row + BoardConnectivity.rowMask[playerInd]);
-				byte playerCol = (byte) (col + BoardConnectivity.colMask[playerInd]);
-				
-				boolean playerPosReachable   = connectivity.isReachable(playerRow, playerCol);
-				boolean pushTargetUnOccupied = !isOccupied(pushedBoxRow, pushedBoxCol);
-				boolean targetNotDead		 = !Board.deadAt(pushedBoxRow, pushedBoxCol);
+				boolean playerPosReachable   = connectivity.isReachable(playerPos);
+				boolean pushTargetUnOccupied = !isOccupied(boxDestination);
+				boolean targetNotDead		 = !Board.deadAt(boxDestination);
 						
 				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
-					byte move = i;
-					
-					childStates.add(new State(this, boxPos, move));
+					childStates.add(new State(this, boxIndex, m));
 				}
 			}
 		}
 	}
 	
 	public String backtrackSolution() {
-		String result = "";
-		
-		if(lastMove == BoardConnectivity.MOVE_NULL) {
-			return result;
+		if(lastMove == Move.NULL) {
+			return "";
 		}
 		
-		result += BoardConnectivity.MOVE_CHARS[lastMove];
+		StringBuilder result = new StringBuilder();
 		
-		byte currRow = (byte) (playerPosition.row - BoardConnectivity.rowMask[lastMove]);
-		byte currCol = (byte) (playerPosition.col - BoardConnectivity.colMask[lastMove]);
+		result.append(lastMove.moveChar);
+		result.append(parent.connectivity.backtrackPathString(lastMove.stepBack(playerPosition), parent.playerPosition));
+		result.append(parent.backtrackSolution());
 		
-		byte startRow = parent.playerPosition.row;
-		byte startCol = parent.playerPosition.col;
-		
-		BoardPosition endPos = new BoardPosition(currRow, currCol);
-		BoardPosition startPos = new BoardPosition(startRow, startCol);
-		
-		result += parent.connectivity.backtrackPathString(endPos, startPos);
-		
-		result += parent.backtrackSolution();
-		
-		return result;
-	}
-	
-	/**
-	 * Calculates the hash value for the current state.
-	 * 
-	 * This should conform to the definition of state equality.
-	 */
-	private void setHash() {
-		for(byte i=1; i<=Board.rows; i++) {
-			for(byte j=1; j<=Board.cols; j++) {
-				if(connectivity.isReachable(i,j)) {
-					hash ^= Board.zValues[i][j];
-				}
-			}
-		}
-		for (BoardPosition bp : boxPositions) {
-			hash ^= (Board.zValues[bp.row][bp.col] << 1);
-		}
+		return result.toString();
 	}
 	
 	public boolean isSolved() {
@@ -169,7 +110,7 @@ public class State  implements Comparable<State> {
 	public byte boxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
-			if (Board.goalAt(boxCoordinate.row, boxCoordinate.col)) {
+			if (Board.goalAt(boxCoordinate)) {
 				sum++;
 			}
 		}
@@ -177,8 +118,12 @@ public class State  implements Comparable<State> {
 		return sum;
 	}
 	
-	public boolean isOccupied(byte row, byte col) {
-		return Board.wallAt(row, col) || boxAt(row, col);
+	public boolean isOccupied(BoardPosition pos) {
+		return Board.wallAt(pos) || boxAt(pos);
+	}
+
+	public boolean boxAt(BoardPosition pos) {
+		return boxAt(pos.row, pos.col);
 	}
 
 	public boolean boxAt(byte row, byte col) {
@@ -191,7 +136,11 @@ public class State  implements Comparable<State> {
 		return false;
 	}
 	
-	public boolean playerAt(byte row, byte col) {
+	public boolean playerAt(BoardPosition pos) {
+		return playerAt(pos.row, pos.col);
+	}
+
+	private boolean playerAt(byte row, byte col) {
 		if (playerPosition.row == row && playerPosition.col == col) {
 			return true;
 		}
@@ -217,12 +166,52 @@ public class State  implements Comparable<State> {
 	 */
     private boolean equals(State state) {
         return Arrays.equals(state.boxPositions, boxPositions)
-                && state.connectivity.equals(this.connectivity);
+                && state.getConnectivity().equals(getConnectivity());
     }
+
+	/**
+	 * Calculates the hash value for the current state.
+	 *
+	 * This should conform to the definition of state equality.
+	 */
+	private void setHash() {
+		hash = 0;
+		for(byte i=1; i<=Board.rows; i++) {
+			for(byte j=1; j<=Board.cols; j++) {
+				if(getConnectivity().isReachable(i, j)) {
+					hash ^= Board.zValues[i][j];
+				}
+			}
+		}
+		for (BoardPosition bp : boxPositions) {
+			hash ^= (Board.zValues[bp.row][bp.col] << 1);
+		}
+	}
 
 	@Override
 	public int hashCode() {
-		return hash;
+		if(hash == null) {
+			setHash();
+		}
+		return hash.intValue();
+	}
+
+	public BoardPosition[] getBoxPositions() {
+		return boxPositions;
+	}
+
+	public BoardConnectivity getConnectivity() {
+		if(connectivity == null) {
+			connectivity = new BoardConnectivity(this);
+		}
+		return connectivity;
+	}
+
+	public int getHeuristicValue() {
+		if(heuristicValue == null) {
+			heuristicValue = Heuristics.calculateHeuristic(this);
+		}
+		return heuristicValue;
 	}
 
 	@Override

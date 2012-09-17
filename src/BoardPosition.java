@@ -1,4 +1,5 @@
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -27,30 +28,21 @@ public class BoardPosition {
 		this.row = row;
 		this.col = col;
 	}
-	
-	public BoardPosition makeChild(byte move) {
-		BoardPosition child = new BoardPosition(this.row, this.col);
+
+	/**
+	 * @return the neighbors of this position to which a box may be pushed from this position. 
+	 */
+	public List<BoardPosition> makeAllChildren() {
+		List<BoardPosition> children = new LinkedList<BoardPosition>();
 		
-		byte revDir = (byte) ((move+2)%4);
-		
-		if(!Board.wallAt((byte)(child.row +BoardConnectivity.rowMask[revDir]), 
-					     (byte)(child.col +BoardConnectivity.colMask[revDir]))) {
-			child.row += BoardConnectivity.rowMask[move];
-			child.col += BoardConnectivity.colMask[move];
-			
-			if(!Board.wallAt(child.row, child.col) && !Board.deadAt(child.row, child.col)) {
-				return child;
+		for(Move move : Move.DIRECTIONS) {
+			if(!Board.wallAt(move.stepBack(this))) {
+				BoardPosition child = move.stepFrom(this);
+				
+				if(!Board.wallAt(child) && !Board.deadAt(child)) {
+					children.add(child);
+				}
 			}
-		}
-		
-		return null;
-	}
-	
-	public Vector<BoardPosition> makeAllChildren() {
-		Vector<BoardPosition> children = new Vector<BoardPosition>(4);
-		
-		for(byte i=0; i<4; i++) {
-			children.add(makeChild(i));
 		}
 		
 		return children;
@@ -72,5 +64,10 @@ public class BoardPosition {
 	@Override
 	public BoardPosition clone() {
 		return new BoardPosition(row, col);
+	}
+
+	@Override
+	public String toString() {
+		return "(" + row + ", " + col + ")";
 	}
 }

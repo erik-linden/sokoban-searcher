@@ -1,7 +1,6 @@
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
-import java.util.Vector;
-
 
 public class Heuristics {
 
@@ -15,7 +14,7 @@ public class Heuristics {
 	private static int manhattanDist(State state) {
 		int distance = 0;
 
-		for(BoardPosition boxPos : state.boxPositions) {
+		for(BoardPosition boxPos : state.getBoxPositions()) {
 			int minDist = Integer.MAX_VALUE;
 
 			for(BoardPosition goalPos : Board.goalPositions) {
@@ -34,7 +33,7 @@ public class Heuristics {
 		int[][] costs = new int[Board.nGoals][Board.nGoals];
 
 		int i = 0;
-		for(BoardPosition boxPos : state.boxPositions) {
+		for(BoardPosition boxPos : state.getBoxPositions()) {
 			costs[i] = listGoalDistances(state, boxPos);
 			i++;
 		}
@@ -61,18 +60,18 @@ public class Heuristics {
 			BoardPosition current = nodesToCheck.poll();
 			byte childDist = (byte) (distMat[current.row][current.col]+1);
 
-			Vector<BoardPosition> children = current.makeAllChildren();
+			List<BoardPosition> children = current.makeAllChildren();
 			for(BoardPosition child : children) {
 				if(child != null) {
 					boolean notChecked = distMat[child.row][child.col]==VeryFar;
-					boolean notIsWall  = !Board.wallAt(child.row, child.col);
-					boolean notIsDead  = !Board.deadAt(child.row, child.col);
+					boolean notIsWall  = !Board.wallAt(child);
+					boolean notIsDead  = !Board.deadAt(child);
 
 					if(notChecked && notIsWall && notIsDead) {
 						distMat[child.row][child.col] = childDist;
 						nodesToCheck.add(child);
 
-						if(Board.goalAt(child.row, child.col)) {
+						if(Board.goalAt(child)) {
 							goalsFound++;
 						}
 					}
