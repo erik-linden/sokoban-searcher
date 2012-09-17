@@ -9,7 +9,7 @@ public class Solver {
 		Board.initialize(lines);
 
 		System.out.println("Board to solve:");
-		System.out.println(Board.staticToString());
+		System.out.println(Board.ToString());
 		
 		State solvedState = idaStar(deadline);
 		if(solvedState == null) {

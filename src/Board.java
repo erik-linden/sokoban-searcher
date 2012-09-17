@@ -280,12 +280,13 @@ public class Board {
 		return NOT_CORNERED;
 	}
 
-	public static String staticToString() {
-		return new Board().toString();
-	}
-
-	@Override
-	public String toString() {
+	/**
+	 * This method may not be called <code>toString</code>, since
+	 * {@link Object#toString()} is not static.
+	 *
+	 * @return A String representation of the board.
+	 */
+	public static String ToString() {
 		String result = "";
 
 		for(byte i=1; i<=rows; i++) {
