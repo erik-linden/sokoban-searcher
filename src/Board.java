@@ -53,12 +53,18 @@ public class Board {
 	public static State initialState;
 
 	/**
-	 * Constructs a board using an vector of
-	 * strings supplied from the course server.
-	 * 
-	 * @param lines Lines from the server
+	 * Hide the constructor. This class should not be instantiated.
 	 */
-	public Board(ArrayList<String> lines) {
+	private Board() {};
+
+	/**
+	 * Initializes the board using a vector of strings supplied from the course
+	 * server.
+	 * 
+	 * @param lines
+	 *            Lines from the server
+	 */
+	public static void initialize(ArrayList<String> lines) {
 		rows = (byte) lines.size();
 		cols = (byte) 0;
 
@@ -119,7 +125,7 @@ public class Board {
 		nGoals = (byte) goalPositions.size();
 
 		markDead();
-		initialState = new State(this, playerPosition, boxPositions);
+		initialState = new State(playerPosition, boxPositions);
 	}
 
 	public static boolean floorAt(byte row, byte col) {
@@ -248,6 +254,9 @@ public class Board {
 		return NOT_CORNERED;
 	}
 
+	public static String staticToString() {
+		return new Board().toString();
+	}
 
 	@Override
 	public String toString() {

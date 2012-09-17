@@ -3,14 +3,13 @@ import java.util.HashSet;
 import java.util.Stack;
 import java.util.Vector;
 
-
 public class Solver {
 
 	public static String solve(ArrayList<String> lines, Deadline deadline) {
-		Board board = new Board(lines);
+		Board.initialize(lines);
 
 		System.out.println("Board to solve:");
-		System.out.println(board.toString());
+		System.out.println(Board.staticToString());
 		
 		State solvedState = idaStar(deadline);
 		if(solvedState == null) {

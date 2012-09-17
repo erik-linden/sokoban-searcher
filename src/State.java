@@ -28,7 +28,7 @@ public class State  implements Comparable<State> {
 	 * @param playerPosition the player's initial position
 	 * @param boxPositions the boxes' initial positions
 	 */
-	public State(Board board, BoardPosition playerPosition,
+	public State(BoardPosition playerPosition,
 			Collection<BoardPosition> boxPositions) {
 		this.playerPosition = playerPosition;
 		this.boxPositions 	= boxPositions;
