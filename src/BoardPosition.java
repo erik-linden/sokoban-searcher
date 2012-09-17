@@ -32,7 +32,7 @@ public class BoardPosition {
 	/**
 	 * @return the neighbors of this position to which a box may be pushed from this position. 
 	 */
-	public List<BoardPosition> makeAllChildren() {
+	public List<BoardPosition> getPushableNeighbors() {
 		List<BoardPosition> children = new LinkedList<BoardPosition>();
 		
 		for(Move move : Move.DIRECTIONS) {

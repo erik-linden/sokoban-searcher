@@ -28,7 +28,7 @@ public class BoardConnectivity {
 			}
 		}
 
-		setConnectivity(state);
+		initialize(state);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class BoardConnectivity {
 	 * 
 	 * @param state State checked for connectivity
 	 */
-	private void setConnectivity(State state) {
+	private void initialize(State state) {
 		Queue<BoardPosition> positionsToExpand = new LinkedList<BoardPosition>();
 
 		positionsToExpand.add(state.playerPosition);

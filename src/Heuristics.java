@@ -60,7 +60,7 @@ public class Heuristics {
 			BoardPosition current = nodesToCheck.poll();
 			byte childDist = (byte) (distMat[current.row][current.col]+1);
 
-			List<BoardPosition> children = current.makeAllChildren();
+			List<BoardPosition> children = current.getPushableNeighbors();
 			for(BoardPosition child : children) {
 				if(child != null) {
 					boolean notChecked = distMat[child.row][child.col]==VeryFar;

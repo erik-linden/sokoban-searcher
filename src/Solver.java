@@ -47,7 +47,7 @@ public class Solver {
 				if(!visited.contains(parent)) {
 					visited.add(parent);
 
-					parent.getPushStates(childStates);
+					parent.getChildren(childStates);
 
 					for(State child : childStates) {
 						
@@ -63,8 +63,7 @@ public class Solver {
 						int childCost = child.nPushes+child.getHeuristicValue();
 						if(childCost > cutoff) {
 							nextCutoff = Math.min(nextCutoff, childCost);
-						}
-						else if(!nodesLeft.contains(child)) {
+						} else if(!nodesLeft.contains(child)) {
 							nodesLeft.add(child);
 						}
 
@@ -73,8 +72,7 @@ public class Solver {
 			}
 			if(cutoff < nextCutoff) {
 				cutoff = nextCutoff;
-			}
-			else {
+			} else {
 				return null;
 			}
 		}

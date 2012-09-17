@@ -67,7 +67,7 @@ public class State  implements Comparable<State> {
 		return numBoxesOnGoals() == Board.goalPositions.length;
 	}
 
-	public void getPushStates(Collection<State> childStates) {
+	public void getChildren(Collection<State> childStates) {
 		childStates.clear();
 
 		for(int boxIndex=0; boxIndex<boxPositions.length; boxIndex++) {
