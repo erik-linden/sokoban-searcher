@@ -10,10 +10,10 @@ import java.util.Collection;
  */
 public class State  implements Comparable<State> {
 	
-	public final BoardPosition playerPosition;
+	public BoardPosition playerPosition;
 	public final State parent;
 	public final Move lastMove;
-	public final int nPushes;
+	public int nPushes;
 	
 	private BoardPosition[] boxPositions;
 	private BoardConnectivity connectivity;
@@ -59,8 +59,39 @@ public class State  implements Comparable<State> {
 	 * @param move the {@link Move} made to push the box
 	 */
 	public State(State parent, int boxIndex, Move move) {
-		this(parent, parent.boxPositions[boxIndex].clone(), parent.boxPositions, move);
+		this(parent, parent.boxPositions[boxIndex], parent.boxPositions, move);
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
+//		tunnelMacro(boxIndex, move);
+	}
+
+	/**
+	 * Checks if the last performed move triggers entering a tunnel, and keeps
+	 * pushing the box until it reaches the end of the tunnel.
+	 *
+	 * @param boxIndex the box that was just pushed
+	 * @param direction the move that was performed on the box
+	 */
+	private void tunnelMacro(int boxIndex, Move direction) {
+		Move perpL = direction.perpendicular();
+		Move perpR = perpL.opposite();
+
+		// Check if the box is within the tunnel already
+		BoardPosition frontOfBox = direction.stepFrom(boxPositions[boxIndex]);
+		if(isOccupied(frontOfBox)
+				|| !Board.wallAt(perpL.stepFrom(boxPositions[boxIndex]))
+				|| !Board.wallAt(perpR.stepFrom(boxPositions[boxIndex]))) {
+			return;
+		}
+
+		// Keep going forward while in the tunnel
+		while(!isOccupied(frontOfBox)
+				&& Board.wallAt(perpL.stepFrom(frontOfBox))
+				&& Board.wallAt(perpR.stepFrom(frontOfBox))) {
+			++nPushes;
+			frontOfBox = direction.stepFrom(frontOfBox);
+		}
+		boxPositions[boxIndex] = direction.stepBack(frontOfBox);
+		playerPosition = direction.stepBack(boxPositions[boxIndex]);
 	}
 	
 	public boolean isSolved() {

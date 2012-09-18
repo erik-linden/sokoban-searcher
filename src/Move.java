@@ -56,6 +56,29 @@ public enum Move {
 		}
 		return NO_MOVE;
 	}
+
+	/**
+	 * Returns a move that is perpendicular to this one, by rotating 90 degrees counterclockwise.
+	 *
+	 * Cheat sheet:
+	 * <ul>
+	 * <li>RIGHT -> UP</li>
+	 * <li>UP -> LEFT</li>
+	 * <li>LEFT -> DOWN</li>
+	 * <li>DOWN -> RIGHT</li>
+	 * <li>Any other move is mapped to itself.</li>
+	 * </ul>
+	 * @return The move you get by rotating this one 90 degrees counterclockwise.
+	 */
+	public Move perpendicular() {
+		switch(this) {
+		case RIGHT: return UP;
+		case UP: return LEFT;
+		case LEFT: return DOWN;
+		case DOWN: return RIGHT;
+		}
+		return this;
+	}
 	
 	/**
 	 * Returns the position you would end up if you make this move.
