@@ -37,10 +37,9 @@ public enum Move {
 	 * Returns the move opposite to this one, according to the following rules:
 	 *
 	 * <ul>
-	 * <li>RIGHT and LEFT are opposites</li>
-	 * <li>UP and DOWN are opposites</li>
-	 * <li>NULL is opposite to itself</li>
-	 * <li>NO_MOVE is opposite to itself</li>
+	 * <li>RIGHT and LEFT are opposites.</li>
+	 * <li>UP and DOWN are opposites.</li>
+	 * <li>Any other move is opposite to itself.</li>
 	 * </ul>
 	 *
 	 * @return The move opposite to this one.
@@ -51,10 +50,8 @@ public enum Move {
 		case UP: return DOWN;
 		case LEFT: return RIGHT;
 		case DOWN: return UP;
-		case NULL: return NULL;
-		case NO_MOVE: return NO_MOVE;
 		}
-		return NO_MOVE;
+		return this;
 	}
 
 	/**
