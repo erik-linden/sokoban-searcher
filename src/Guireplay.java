@@ -43,16 +43,10 @@ public class Guireplay extends JFrame {
 
 			State child = solutionStack.pop();
 
-			BoardPosition endPos = child.lastMove.stepBack(child.playerPosition);
-			List<Move> movesList = parent.getConnectivity().backtrackPathMoves(endPos, playerPos);
-
-			BoardPosition startPos = playerPos;
-
-			for(int i = movesList.size()-1; i >= 0; i--) {
-				startPos = movesList.get(i).stepFrom(startPos);
-
+			List<BoardPosition> positionSequence = child.getPositionSequence();
+			for(BoardPosition pos : positionSequence) {
 				con.removeAll();
-				con.add(getPlot(parent, startPos));
+				con.add(getPlot(parent, pos));
 				revalidate();
 				pause();
 			}

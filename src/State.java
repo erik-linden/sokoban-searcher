@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class that hold the dynamic elements of a board and
@@ -19,6 +21,7 @@ public class State  implements Comparable<State> {
 	private BoardConnectivity connectivity;
 	private Integer heuristicValue;
 	private Integer hash = null;
+	private int tunnelExtraPushes = 0;
 	
 	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move) {
 		this.parent = parent;
@@ -87,9 +90,10 @@ public class State  implements Comparable<State> {
 		while(!isOccupied(frontOfBox)
 				&& Board.wallAt(perpL.stepFrom(frontOfBox))
 				&& Board.wallAt(perpR.stepFrom(frontOfBox))) {
-			++nPushes;
+			++tunnelExtraPushes;
 			frontOfBox = direction.stepFrom(frontOfBox);
 		}
+		nPushes += tunnelExtraPushes;
 		boxPositions[boxIndex] = direction.stepBack(frontOfBox);
 		playerPosition = direction.stepBack(boxPositions[boxIndex]);
 	}
@@ -124,14 +128,46 @@ public class State  implements Comparable<State> {
 		}
 		
 		StringBuilder result = new StringBuilder();
-		
 		result.append(lastMove.moveChar);
-		result.append(parent.connectivity.backtrackPathString(lastMove.stepBack(playerPosition), parent.playerPosition));
+
+		BoardPosition prevPos = lastMove.stepBack(playerPosition);
+		for(int i=0; i<tunnelExtraPushes; ++i) {
+			prevPos = lastMove.stepBack(prevPos);
+			result.append(lastMove.moveChar);
+		}
+
+		result.append(parent.connectivity.backtrackPathString(prevPos, parent.playerPosition));
 		result.append(parent.backtrackSolution());
 		
 		return result.toString();
 	}
 	
+	/**
+	 * Used for drawing the solution.
+	 * @return a {@link List} with all {@link BoardPosition}s visited since the parent's end position.
+	 */
+	public List<BoardPosition> getPositionSequence() {
+		LinkedList<BoardPosition> result = new LinkedList<BoardPosition>();
+
+		BoardPosition pos = playerPosition;
+		for(int i=0; i<tunnelExtraPushes; ++i) {
+			pos = lastMove.stepBack(pos);
+			result.addFirst(pos);
+		}
+
+		pos = lastMove.stepBack(pos);
+
+		List<Move> intermediateMoves = parent.connectivity.backtrackPathMoves(pos, parent.playerPosition);
+		System.out.println(intermediateMoves);
+
+		for(Move move : intermediateMoves) {
+			result.addFirst(pos);
+			pos = move.stepBack(pos);
+		}
+
+		return result;
+	}
+
 	public byte numBoxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
