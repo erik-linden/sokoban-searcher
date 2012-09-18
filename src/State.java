@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class that hold the dynamic elements of a board and
@@ -10,15 +12,16 @@ import java.util.Collection;
  */
 public class State  implements Comparable<State> {
 	
-	public final BoardPosition playerPosition;
+	public BoardPosition playerPosition;
 	public final State parent;
 	public final Move lastMove;
-	public final int nPushes;
+	public int nPushes;
 	
 	private BoardPosition[] boxPositions;
 	private BoardConnectivity connectivity;
 	private Integer heuristicValue;
 	private Integer hash = null;
+	private int tunnelExtraPushes = 0;
 	
 	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move) {
 		this.parent = parent;
@@ -59,8 +62,40 @@ public class State  implements Comparable<State> {
 	 * @param move the {@link Move} made to push the box
 	 */
 	public State(State parent, int boxIndex, Move move) {
-		this(parent, parent.boxPositions[boxIndex].clone(), parent.boxPositions, move);
+		this(parent, parent.boxPositions[boxIndex], parent.boxPositions, move);
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
+		tunnelMacro(boxIndex, move);
+	}
+
+	/**
+	 * Checks if the last performed move triggers entering a tunnel, and keeps
+	 * pushing the box until it reaches the end of the tunnel.
+	 *
+	 * @param boxIndex the box that was just pushed
+	 * @param direction the move that was performed on the box
+	 */
+	private void tunnelMacro(int boxIndex, Move direction) {
+		Move perpL = direction.perpendicular();
+		Move perpR = perpL.opposite();
+
+		// Check if the box is within the tunnel already
+		BoardPosition frontOfBox = direction.stepFrom(boxPositions[boxIndex]);
+		if(isOccupied(frontOfBox)
+				|| !Board.wallAt(perpL.stepFrom(boxPositions[boxIndex]))
+				|| !Board.wallAt(perpR.stepFrom(boxPositions[boxIndex]))) {
+			return;
+		}
+
+		// Keep going forward while in the tunnel
+		while(!isOccupied(frontOfBox)
+				&& Board.wallAt(perpL.stepFrom(frontOfBox))
+				&& Board.wallAt(perpR.stepFrom(frontOfBox))) {
+			++tunnelExtraPushes;
+			frontOfBox = direction.stepFrom(frontOfBox);
+		}
+		nPushes += tunnelExtraPushes;
+		boxPositions[boxIndex] = direction.stepBack(frontOfBox);
+		playerPosition = direction.stepBack(boxPositions[boxIndex]);
 	}
 	
 	public boolean isSolved() {
@@ -93,14 +128,46 @@ public class State  implements Comparable<State> {
 		}
 		
 		StringBuilder result = new StringBuilder();
-		
 		result.append(lastMove.moveChar);
-		result.append(parent.connectivity.backtrackPathString(lastMove.stepBack(playerPosition), parent.playerPosition));
+
+		BoardPosition prevPos = lastMove.stepBack(playerPosition);
+		for(int i=0; i<tunnelExtraPushes; ++i) {
+			prevPos = lastMove.stepBack(prevPos);
+			result.append(lastMove.moveChar);
+		}
+
+		result.append(parent.connectivity.backtrackPathString(prevPos, parent.playerPosition));
 		result.append(parent.backtrackSolution());
 		
 		return result.toString();
 	}
 	
+	/**
+	 * Used for drawing the solution.
+	 * @return a {@link List} with all {@link BoardPosition}s visited since the parent's end position.
+	 */
+	public List<BoardPosition> getPositionSequence() {
+		LinkedList<BoardPosition> result = new LinkedList<BoardPosition>();
+
+		BoardPosition pos = playerPosition;
+		for(int i=0; i<tunnelExtraPushes; ++i) {
+			pos = lastMove.stepBack(pos);
+			result.addFirst(pos);
+		}
+
+		pos = lastMove.stepBack(pos);
+
+		List<Move> intermediateMoves = parent.connectivity.backtrackPathMoves(pos, parent.playerPosition);
+		System.out.println(intermediateMoves);
+
+		for(Move move : intermediateMoves) {
+			result.addFirst(pos);
+			pos = move.stepBack(pos);
+		}
+
+		return result;
+	}
+
 	public byte numBoxesOnGoals() {
 		byte sum = 0;
 		for (BoardPosition boxCoordinate : boxPositions) {
