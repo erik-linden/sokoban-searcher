@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Client {
+public class CustomClient {
 
 	public static void main(String[] pArgs) 
 	{		
