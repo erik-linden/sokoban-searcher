@@ -23,7 +23,7 @@ public class Solver {
 	}
 
 	private static State idaStar(Deadline deadline) {
-		HashSet<State> visited = new HashSet<State>();
+		HashSet<Integer> visited = new HashSet<Integer>();
 		Stack<State> nodesLeft = new Stack<State>();
 		List<State> childStates = new LinkedList<State>();
 
@@ -45,7 +45,7 @@ public class Solver {
 				State parent = nodesLeft.pop();
 
 				if(!visited.contains(parent)) {
-					visited.add(parent);
+					visited.add(parent.hashCode());
 
 					parent.getChildren(childStates);
 
