@@ -4,23 +4,34 @@ import java.util.Queue;
 
 public class Heuristics {
 
-	static final byte VeryFar = Byte.MAX_VALUE;
+	static final byte VeryFar   = Byte.MAX_VALUE;
+	static final byte NoLastBox = -1;
+	int[][] costMat = new int[Board.goalPositions.length][Board.goalPositions.length];
+	Integer value = null;
 
+	public void calculateHeuristic(State state) {
+		bipartDist(state);
+	}
 	
-	public static int calculateHeuristic(State state) {
-		return bipartDist(state);
+	Heuristics(Heuristics h) {
+		this.costMat = h.costMat.clone();
+		this.value   = null; 
 	}
 
-	private static int manhattanDist(State state) {
+	public Heuristics() {
+		// TODO Auto-generated constructor stub
+	}
+
+	private int manhattanDist(State state) {
 		int distance = 0;
 
 		for(BoardPosition boxPos : state.getBoxPositions()) {
 			int minDist = Integer.MAX_VALUE;
 
 			for(BoardPosition goalPos : Board.goalPositions) {
-			    minDist = Math.min(minDist,
-			            Math.abs(boxPos.row - goalPos.row)
-			            + Math.abs(boxPos.col - goalPos.col));
+				minDist = Math.min(minDist,
+						Math.abs(boxPos.row - goalPos.row)
+						+ Math.abs(boxPos.col - goalPos.col));
 			}
 
 			distance += minDist;
@@ -28,24 +39,26 @@ public class Heuristics {
 
 		return distance;
 	}
-	
-	private static int bipartDist(State state) {
-		int[][] costs = new int[Board.goalPositions.length][Board.goalPositions.length];
 
-		int i = 0;
-		for(BoardPosition boxPos : state.getBoxPositions()) {
-			costs[i] = listGoalDistances(state, boxPos);
-			i++;
+	private void bipartDist(State state) {
+		int indLastPushed = state.indPushedLast;
+		if(indLastPushed == NoLastBox) {
+			for(int i=0; i<Board.goalPositions.length; i++) {
+				costMat[i] = listGoalDistances(state, i);
+			}
 		}
-		
-		int minCost = HungarianAlgorithm.hgAlgorithm(costs, "min");
-		return minCost;
+		else {
+			costMat[indLastPushed] = listGoalDistances(state, indLastPushed);
+		}
+
+		value = HungarianAlgorithm.hgAlgorithm(costMat, "min");
 	}
 
-	private static int[] listGoalDistances(State state, BoardPosition start) {
+	private int[] listGoalDistances(State state, int boxInd) {
 		byte[][] distMat = new byte[Board.rows+2][Board.cols+2];
+		BoardPosition start = state.getBox(boxInd);
 		byte goalsFound = 0;
-		
+
 		for(int i=1; i<=Board.rows; i++) {
 			for(int j=1; j<=Board.cols; j++) {
 				distMat[i][j] = VeryFar;

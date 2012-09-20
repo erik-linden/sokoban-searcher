@@ -15,19 +15,18 @@ public class State  implements Comparable<State> {
 	public BoardPosition playerPosition;
 	public final State parent;
 	public final Move lastMove;
-	public final int indPushedBox;
+	public final int indPushedLast;
 	public int nPushes;
 	
 	private BoardPosition[] boxPositions;
 	private BoardConnectivity connectivity;
-	private Integer heuristicValue;
+	private Heuristics heuristics = new Heuristics();
 	private Integer hash = null;
 	private int tunnelExtraPushes = 0;
 	
 	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move, int boxInd) {
 		this.parent = parent;
 		this.playerPosition = playerPosition;
-		this.indPushedBox = boxInd;
 		/*
 		 * This copy will be a shallow copy, meaning the elements in the array
 		 * are copied by reference. This means that after this statement,
@@ -38,8 +37,11 @@ public class State  implements Comparable<State> {
 		lastMove = move;
 		if(parent == null) {
 			nPushes = 0;
+			this.indPushedLast = Heuristics.NoLastBox;
 		} else {
 			nPushes = parent.nPushes+1;
+			this.indPushedLast = boxInd;
+			this.heuristics = new Heuristics(parent.heuristics);
 		}
 	}
 
@@ -214,6 +216,10 @@ public class State  implements Comparable<State> {
 	public BoardPosition[] getBoxPositions() {
 		return boxPositions;
 	}
+	
+	public BoardPosition getBox(int ind) {
+		return boxPositions[ind];
+	}
 
 	public BoardConnectivity getConnectivity() {
 		if(connectivity == null) {
@@ -223,10 +229,10 @@ public class State  implements Comparable<State> {
 	}
 
 	public int getHeuristicValue() {
-		if(heuristicValue == null) {
-			heuristicValue = Heuristics.calculateHeuristic(this);
+		if(heuristics.value == null) {
+			heuristics.calculateHeuristic(this);
 		}
-		return heuristicValue;
+		return heuristics.value;
 	}
 
 	/**
@@ -310,9 +316,9 @@ public class State  implements Comparable<State> {
 
 	@Override
 	public int compareTo(State other) {
-		if (this.heuristicValue == other.heuristicValue)
+		if (this.heuristics.value == other.heuristics.value)
             return 0;
-        else if (this.heuristicValue > other.heuristicValue)
+        else if (this.heuristics.value > other.heuristics.value)
             return 1;
         else
             return -1;
