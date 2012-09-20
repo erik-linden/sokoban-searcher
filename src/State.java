@@ -15,6 +15,7 @@ public class State  implements Comparable<State> {
 	public BoardPosition playerPosition;
 	public final State parent;
 	public final Move lastMove;
+	public final int indPushedBox;
 	public int nPushes;
 	
 	private BoardPosition[] boxPositions;
@@ -23,9 +24,10 @@ public class State  implements Comparable<State> {
 	private Integer hash = null;
 	private int tunnelExtraPushes = 0;
 	
-	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move) {
+	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move, int boxInd) {
 		this.parent = parent;
 		this.playerPosition = playerPosition;
+		this.indPushedBox = boxInd;
 		/*
 		 * This copy will be a shallow copy, meaning the elements in the array
 		 * are copied by reference. This means that after this statement,
@@ -51,7 +53,7 @@ public class State  implements Comparable<State> {
 	 */
 	public State(BoardPosition playerPosition,
 			BoardPosition[] boxPositions) {
-		this(null, playerPosition, boxPositions, Move.NULL);
+		this(null, playerPosition, boxPositions, Move.NULL, -1);
 	}
 	
 	/**
@@ -62,7 +64,7 @@ public class State  implements Comparable<State> {
 	 * @param move the {@link Move} made to push the box
 	 */
 	public State(State parent, int boxIndex, Move move) {
-		this(parent, parent.boxPositions[boxIndex], parent.boxPositions, move);
+		this(parent, parent.boxPositions[boxIndex], parent.boxPositions, move, boxIndex);
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
 		tunnelMacro(boxIndex, move);
 	}
