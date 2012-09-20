@@ -44,14 +44,14 @@ public class Solver {
 				
 				State parent = nodesLeft.pop();
 
-				if(!visited.contains(parent)) {
+				if(!visited.contains(parent.hashCode())) {
 					visited.add(parent.hashCode());
 
 					parent.getChildren(childStates);
 
 					for(State child : childStates) {
 						
-						if(visited.contains(child)) {
+						if(visited.contains(child.hashCode())) {
 							continue;
 						}
 
