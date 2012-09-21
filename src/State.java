@@ -55,7 +55,7 @@ public class State  implements Comparable<State> {
 	 */
 	public State(BoardPosition playerPosition,
 			BoardPosition[] boxPositions) {
-		this(null, playerPosition, boxPositions, Move.NULL, -1);
+		this(null, playerPosition, boxPositions, Move.NULL, Heuristics.NoLastBox);
 	}
 	
 	/**
