@@ -71,7 +71,27 @@ public class State  implements Comparable<State> {
 		tunnelMacro(boxIndex, move);
 	}
 
-	/**
+	public String backtrackSolution() {
+		if(lastMove == Move.NULL) {
+			return "";
+		}
+
+		StringBuilder result = new StringBuilder();
+		result.append(lastMove.moveChar);
+
+		BoardPosition prevPos = lastMove.stepBack(playerPosition);
+		for(int i=0; i<tunnelExtraPushes; ++i) {
+			prevPos = lastMove.stepBack(prevPos);
+			result.append(lastMove.moveChar);
+		}
+
+		result.append(parent.connectivity.backtrackPathString(prevPos, parent.playerPosition));
+		result.append(parent.backtrackSolution());
+
+		return result.toString();
+    }
+
+    /**
 	 * Checks if the last performed move triggers entering a tunnel, and keeps
 	 * pushing the box until it reaches the end of the tunnel.
 	 *
@@ -124,26 +144,6 @@ public class State  implements Comparable<State> {
 				}
 			}
 		}
-	}
-	
-	public String backtrackSolution() {
-		if(lastMove == Move.NULL) {
-			return "";
-		}
-		
-		StringBuilder result = new StringBuilder();
-		result.append(lastMove.moveChar);
-
-		BoardPosition prevPos = lastMove.stepBack(playerPosition);
-		for(int i=0; i<tunnelExtraPushes; ++i) {
-			prevPos = lastMove.stepBack(prevPos);
-			result.append(lastMove.moveChar);
-		}
-
-		result.append(parent.connectivity.backtrackPathString(prevPos, parent.playerPosition));
-		result.append(parent.backtrackSolution());
-		
-		return result.toString();
 	}
 	
 	/**
