@@ -31,7 +31,7 @@
     </target>
 
     <target name="dist" depends="compile">
-        <zip destfile="${dist.dir}/TheRealGroup-sokoban.zip" basedir="${src.dir}"/>
+        <zip destfile="${dist.dir}/TheRealGroup-sokoban.zip" basedir="${src.dir}" excludes="**/Guireplay.java"/>
     </target>
 
 </project>
