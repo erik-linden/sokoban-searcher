@@ -68,7 +68,7 @@ public class State  implements Comparable<State> {
 	public State(State parent, int boxIndex, Move move) {
 		this(parent, parent.boxPositions[boxIndex], parent.boxPositions, move, boxIndex);
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
-		tunnelMacro(boxIndex, move);
+//		tunnelMacro(boxIndex, move);
 	}
 
 	public String backtrackSolution() {
