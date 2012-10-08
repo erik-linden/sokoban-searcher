@@ -87,7 +87,14 @@ public enum Move {
 	 * @see #stepBack(BoardPosition)
 	 */
 	public BoardPosition stepFrom(BoardPosition pos) {
-		return new BoardPosition((byte)(pos.row + dr), (byte) (pos.col + dc));
+		return stepFrom(pos, 1);
+	}
+
+	/**
+	 * {@link #stepFrom(BoardPosition)} repeated <code>numSteps</code> times.
+	 */
+	public BoardPosition stepFrom(BoardPosition pos, int numSteps) {
+		return new BoardPosition((byte)(pos.row + dr*numSteps), (byte) (pos.col + dc*numSteps));
 	}
 	
 	/**
@@ -101,7 +108,14 @@ public enum Move {
 	 *         given position after making this move.
 	 */
 	public BoardPosition stepBack(BoardPosition pos) {
-		return opposite().stepFrom(pos);
+		return stepBack(pos, 1);
+	}
+
+	/**
+	 * {@link #stepBack(BoardPosition)} repeated <code>numSteps</code> times.
+	 */
+	public BoardPosition stepBack(BoardPosition pos, int numSteps) {
+		return opposite().stepFrom(pos, numSteps);
 	}
 	
 	@Override
