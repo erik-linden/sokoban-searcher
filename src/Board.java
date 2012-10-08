@@ -124,7 +124,7 @@ public class Board {
 	}
 
 	/**
-	 * Marks dead-end squares, from which a box cannot be moved to a goal.
+	 * Marks dead-end squares, from which a box cannot be pushed to a goal.
 	 *
 	 * Example (view in fixed-width font!):
 	 * <pre><code>
