@@ -54,7 +54,7 @@ public class Heuristics {
 		value = HungarianAlgorithm.hgAlgorithm(costMat, "min");
 	}
 
-	private int[] listGoalDistances(State state, int boxInd) {
+	protected int[] listGoalDistances(State state, int boxInd) {
 		byte[][] distMat = new byte[Board.rows+2][Board.cols+2];
 		BoardPosition start = state.getBox(boxInd);
 		byte goalsFound = 0;
