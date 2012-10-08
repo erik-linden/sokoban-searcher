@@ -16,7 +16,7 @@ public class State  implements Comparable<State> {
 	public final State parent;
 	public final Move lastMove;
 	public final int indPushedLast;
-	public int nPushes;
+	protected int nSignificantMoves;
 	
 	private BoardPosition[] boxPositions;
 	private BoardConnectivity connectivity;
@@ -36,10 +36,10 @@ public class State  implements Comparable<State> {
 		this.boxPositions = boxPositions.clone();
 		lastMove = move;
 		if(parent == null) {
-			nPushes = 0;
+			nSignificantMoves = 0;
 			this.indPushedLast = Heuristics.NoLastBox;
 		} else {
-			nPushes = parent.nPushes+1;
+			nSignificantMoves = parent.nSignificantMoves+1;
 			this.indPushedLast = boxInd;
 			this.heuristics = new Heuristics(parent.heuristics);
 		}
@@ -117,7 +117,7 @@ public class State  implements Comparable<State> {
 			++tunnelExtraPushes;
 			frontOfBox = direction.stepFrom(frontOfBox);
 		}
-		nPushes += tunnelExtraPushes;
+		nSignificantMoves += tunnelExtraPushes;
 		boxPositions[boxIndex] = direction.stepBack(frontOfBox);
 		playerPosition = direction.stepBack(boxPositions[boxIndex]);
 	}
@@ -170,6 +170,10 @@ public class State  implements Comparable<State> {
 		}
 
 		return result;
+	}
+
+	public int getNumberOfSignificantMoves() {
+		return nSignificantMoves;
 	}
 
 	public byte numBoxesOnGoals() {

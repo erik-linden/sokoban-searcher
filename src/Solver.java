@@ -56,11 +56,11 @@ public class Solver {
 						}
 
 						if(child.isSolved()) {
-							System.out.println("Solved in "+child.nPushes+" pushes.");
+							System.out.println("Solved in "+child.getNumberOfSignificantMoves() +" pushes.");
 							return child;
 						}
 
-						int childCost = child.nPushes+child.getHeuristicValue();
+						int childCost = child.getNumberOfSignificantMoves() + child.getHeuristicValue();
 						if(childCost > cutoff) {
 							nextCutoff = Math.min(nextCutoff, childCost);
 						} else if(!nodesLeft.contains(child)) {
