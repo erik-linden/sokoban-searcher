@@ -75,18 +75,14 @@ public class Heuristics {
 
 			List<BoardPosition> children = current.getPushableNeighbors();
 			for(BoardPosition child : children) {
-				if(child != null) {
-					boolean notChecked = distMat[child.row][child.col]==VeryFar;
-					boolean notIsWall  = !Board.wallAt(child);
-					boolean notIsDead  = !Board.deadAt(child);
+				if(child != null
+						&& distMat[child.row][child.col] == VeryFar
+						&& Board.isPushableTo(child)) {
+					distMat[child.row][child.col] = childDist;
+					nodesToCheck.add(child);
 
-					if(notChecked && notIsWall && notIsDead) {
-						distMat[child.row][child.col] = childDist;
-						nodesToCheck.add(child);
-
-						if(Board.goalAt(child)) {
-							goalsFound++;
-						}
+					if(Board.goalAt(child)) {
+						++goalsFound;
 					}
 				}
 			}

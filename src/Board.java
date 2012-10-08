@@ -156,11 +156,7 @@ public class Board {
 				}
 
 				byte isCornered = isCornered(row, col);
-				if (isCornered != NOT_CORNERED) {
-					if (goalAt(row, col)) {
-						continue;
-					}
-
+				if (isCornered != NOT_CORNERED && !goalAt(row, col)) {
 					// It's a non-goal corner => dead end
 					board[row][col] |= DEAD;
 
