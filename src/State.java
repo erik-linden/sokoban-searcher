@@ -18,13 +18,13 @@ public class State  implements Comparable<State> {
 	public final int indPushedLast;
 	protected int nSignificantMoves;
 	
-	private BoardPosition[] boxPositions;
-	private BoardConnectivity connectivity;
+	protected BoardPosition[] boxPositions;
+	protected BoardConnectivity connectivity;
 	private Heuristics heuristics = new Heuristics();
 	private Integer hash = null;
 	private int tunnelExtraPushes = 0;
 	
-	private State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move, int boxInd) {
+	protected State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move, int boxInd) {
 		this.parent = parent;
 		this.playerPosition = playerPosition;
 		/*
@@ -98,7 +98,7 @@ public class State  implements Comparable<State> {
 	 * @param boxIndex the box that was just pushed
 	 * @param direction the move that was performed on the box
 	 */
-	private void tunnelMacro(int boxIndex, Move direction) {
+	protected void tunnelMacro(int boxIndex, Move direction) {
 		Move perpL = direction.perpendicular();
 		Move perpR = perpL.opposite();
 
