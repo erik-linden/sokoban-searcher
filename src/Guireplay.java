@@ -27,7 +27,6 @@ public class Guireplay extends JFrame {
 
 		Stack<State> solutionStack = new Stack<State>();
 
-
 		solutionStack.push(state);
 		while (state.parent != null) {
 			state = state.parent;

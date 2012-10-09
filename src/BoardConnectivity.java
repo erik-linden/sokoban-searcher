@@ -75,17 +75,16 @@ public class BoardConnectivity {
 	public List<Move> backtrackPathMoves(BoardPosition endPos, BoardPosition startPos) {
 		List<Move> movesList = new LinkedList<Move>();
 		
-		BoardPosition pos = endPos;
-		
-		if(!isReachable(pos)) {
-			throw new RuntimeException("Backtracking started on unreachable square!");
+		if(!isReachable(endPos)) {
+			throw new RuntimeException("Backtracking started on unreachable square " + endPos);
 		}
 		
+		BoardPosition pos = endPos;
 		Move move = connectivity[pos.row][pos.col];
 		
 		while(move != Move.NULL) {
 			if(move==Move.NO_MOVE) {
-				throw new RuntimeException("Backtracking led to unreachable square!");
+				throw new RuntimeException("Backtracking led to unreachable square " + pos);
 			}
 			movesList.add(move);
 			
