@@ -1,20 +1,22 @@
-import java.util.Date;
+import java.util.Calendar;
 
 public class Deadline {
-    
-    Deadline(Date pDate)
-    {
-        mDate=pDate;
-    }
 
-    public Deadline(int i) {
-    	mDate = new Date(new Date().getTime()+i);
+	private long t;
+
+	/**
+	 * Constructs a {@link Deadline} instance set <code>l</code> milliseconds
+	 * into the future.
+	 *
+	 * @param l
+	 *            the number of milliseconds until the deadline.
+	 */
+	public Deadline(long l) {
+		t = Calendar.getInstance().getTimeInMillis() + l;
 	}
 
-	long TimeUntil()
-    {
-        return mDate.getTime()-(new Date()).getTime();
-    }
-        
-    private Date mDate;
+	long timeUntil() {
+		return t - Calendar.getInstance().getTimeInMillis();
+	}
+
 }

@@ -76,7 +76,7 @@ public class Solver {
 			System.out.println("Search depth: "+cutoff);
 			while(!nodesLeft.isEmpty()) {
 				
-				if(deadline.TimeUntil()<0) {
+				if(deadline.timeUntil()<0) {
 					return null;
 				}
 				
