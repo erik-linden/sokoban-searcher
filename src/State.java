@@ -360,8 +360,20 @@ public class State  implements Comparable<State> {
 	 * @return
 	 */
 	private boolean equals(State state) {
-	    return Arrays.equals(state.boxPositions, boxPositions)
-	            && state.getConnectivity().equals(getConnectivity());
+		for(BoardPosition boxPos : boxPositions) {
+			boolean contained = false;
+			for(BoardPosition otherPos : state.boxPositions) {
+				if(otherPos.equals(boxPos)) {
+					contained = true;
+					break;
+				}
+			}
+			if(!contained) {
+				return false;
+			}
+		}
+
+	    return state.getConnectivity().equals(getConnectivity());
 	}
 
 	@Override
