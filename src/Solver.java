@@ -71,11 +71,11 @@ public class Solver {
 		Board.setRandomNumbers();
 
 		Board.transformToBackward();
-		Map<Integer, Integer> backwardResult = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
+		Map<Integer, Integer> backwardVisited = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
 
 		Board.initialize(lines);
 
-		State solutionCandidate = searchForward(backwardResult, deadline);
+		State solutionCandidate = searchForward(backwardVisited, deadline);
 		if(solutionCandidate == null ) {
 			System.out.println("No solution found");
 			return "";
@@ -88,7 +88,7 @@ public class Solver {
 
 		State solvedState =
 				fixedDepthAStar(solutionCandidate,
-						backwardResult.get(solutionCandidate.hashCode())
+						backwardVisited.get(solutionCandidate.hashCode())
 								+ solutionCandidate.nSignificantMoves, deadline);
 		if(solvedState == null) {
 			System.out.println("No solution found");
@@ -184,7 +184,7 @@ public class Solver {
 		}
 	}
 
-	private static State searchForward(Map<Integer, Integer> backwardResult, Deadline deadline) {
+	private static State searchForward(Map<Integer, Integer> backwardVisited, Deadline deadline) {
 		HashSet<Integer> visited = new HashSet<Integer>();
 		PriorityQueue<State> q = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
@@ -224,7 +224,7 @@ public class Solver {
 						return child;
 					}
 
-					if(backwardResult.containsKey(childHash)) {
+					if(backwardVisited.containsKey(childHash)) {
 						System.out.println("Found match with backward solution at state:");
 						System.out.println(child);
 						return child;
