@@ -12,7 +12,7 @@ public class Solver {
 		System.out.println("Board to solve:");
 		System.out.println(Board.initialState);
 
-		State solvedState = idaStar(deadline);
+		State solvedState = idaStar(new HashSet<Integer>(), deadline);
 		if(solvedState == null) {
 			return "";
 		}
@@ -29,7 +29,7 @@ public class Solver {
 		System.out.println("Board to solve:");
 		System.out.println(Board.initialState);
 
-		State solvedState = idaStar(deadline);
+		State solvedState = idaStar(new HashSet<Integer>(), deadline);
 		System.out.println("Solved state:");
 		System.out.println(solvedState);
 
@@ -60,8 +60,7 @@ public class Solver {
 		return sol;
 	}
 
-	private static State idaStar(Deadline deadline) {
-		HashSet<Integer> visited = new HashSet<Integer>();
+	private static State idaStar(HashSet<Integer> visited, Deadline deadline) {
 		PriorityQueue<State> nodesLeft = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
 		State parent;
