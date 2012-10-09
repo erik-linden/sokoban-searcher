@@ -73,6 +73,8 @@ public class Solver {
 		Board.transformToBackward();
 		Map<Integer, Integer> backwardVisited = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
 
+		System.out.println("Backward search visited " + backwardVisited.size() + " states");
+
 		Board.initialize(lines);
 
 		State solutionCandidate = searchForward(backwardVisited, deadline);
@@ -82,7 +84,7 @@ public class Solver {
 		}
 
 		if(solutionCandidate.isSolved()) {
-			System.out.println("Solved in backward search");
+			System.out.println("Solved in " + solutionCandidate.getNumberOfSignificantMoves() + " significant moves");
 			return new StringBuilder(solutionCandidate.backtrackSolution()).reverse().toString();
 		}
 
@@ -197,7 +199,7 @@ public class Solver {
 			q.add(Board.initialState);
 			visited.clear();
 
-			System.out.println("Search depth: "+cutoff);
+			System.out.println("Search depth in first forward search: "+cutoff);
 
 			int childHash;
 
@@ -225,8 +227,7 @@ public class Solver {
 					}
 
 					if(backwardVisited.containsKey(childHash)) {
-						System.out.println("Found match with backward solution at state:");
-						System.out.println(child);
+						System.out.println("Found match with backward solution at hash " + childHash);
 						return child;
 					}
 
