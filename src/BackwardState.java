@@ -30,25 +30,6 @@ public class BackwardState extends State {
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
 	}
 	
-//	@Override
-//	public String backtrackSolution() {
-//	    String s = super.backtrackSolution();
-//	    
-//        s = s.replaceAll("R", "l");
-//        s = s.replaceAll("L", "r");
-//        s = s.replaceAll("U", "d");
-//        s = s.replaceAll("D", "u");
-//        
-//        s = s.replaceAll("r", "R");
-//        s = s.replaceAll("l", "L");
-//        s = s.replaceAll("u", "U");
-//        s = s.replaceAll("d", "D");
-//        
-//        return s;
-//        
-////		return new StringBuilder(push+walk).reverse().toString();
-//	}
-	
 	@Override
 	protected void tunnelMacro(int boxIndex, Move direction) {
 		throw new NotImplementedException();
