@@ -73,8 +73,6 @@ public class Solver {
 		Board.transformToBackward();
 		Map<Integer, Integer> backwardVisited = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
 
-		System.out.println("Backward search visited " + backwardVisited.size() + " states");
-
 		Board.initialize(lines);
 
 		State solutionCandidate = searchForward(backwardVisited, deadline);
@@ -124,6 +122,8 @@ public class Solver {
 				}
 			}
 		}
+
+		System.out.println("Backward search visited " + visitedDepths.size() + " states");
 
 		return visitedDepths;
 	}
@@ -227,7 +227,12 @@ public class Solver {
 					}
 
 					if(backwardVisited.containsKey(childHash)) {
-						System.out.println("Found match with backward solution at hash " + childHash);
+						System.out
+								.println("Found match with backward solution at hash "
+										+ childHash
+										+ ", time remaining: "
+										+ deadline.timeUntil() + " ms");
+						System.out.println(child);
 						return child;
 					}
 
@@ -256,7 +261,7 @@ public class Solver {
 
 		q.add(startState);
 
-		System.out.println("Search depth: "+maxDepth);
+		System.out.println("Search depth in final forward search: "+maxDepth);
 		while(!q.isEmpty() && deadline.timeUntil() > 0) {
 
 			parent = q.poll();
