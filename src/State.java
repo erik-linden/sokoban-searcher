@@ -189,7 +189,7 @@ public class State  implements Comparable<State> {
 				
 				BoardPosition playerPos = m.opposite().stepFrom(boxPositions[boxIndex]);
 				
-				boolean playerPosReachable   = connectivity.isReachable(playerPos);
+				boolean playerPosReachable   = getConnectivity().isReachable(playerPos);
 				boolean pushTargetUnOccupied = !isOccupied(boxDestination);
 				boolean targetNotDead		 = !Board.deadAt(boxDestination);
 						
