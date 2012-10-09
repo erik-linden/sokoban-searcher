@@ -90,6 +90,59 @@ public class State  implements Comparable<State> {
 
 		return result.toString();
     }
+	
+	/**
+	 * @param boxIndex
+	 * @param direction
+	 * @return If this state is a deadlock, returns <code>true</code>. Note that
+	 *         the state is not guaranteed to not be a deadlock if this method
+	 *         returns <code>false</code>.
+	 */
+	public boolean isSimpleDeadlock(int boxIndex, Move direction) {
+		int leftAreaCount = 0;
+		int rightAreaCount = 0;
+
+		BoardPosition pos = boxPositions[boxIndex];
+		Move perpL = direction.perpendicular();
+		Move perpR = perpL.opposite();
+
+		BoardPosition frontOfBox = direction.stepFrom(pos);
+		BoardPosition leftOfBox = perpL.stepFrom(pos);
+		BoardPosition rightOfBox = perpR.stepFrom(pos);
+		BoardPosition leftAndForward = direction.stepFrom(leftOfBox);
+		BoardPosition rightAndForward = direction.stepFrom(rightOfBox);
+
+		if(isOccupied(frontOfBox)) {
+			leftAreaCount++;
+			rightAreaCount++;
+		}
+		if(isOccupied(leftOfBox)) {
+			leftAreaCount++;
+		}
+		if(isOccupied(leftAndForward)) {
+			leftAreaCount++;
+		}
+
+		if(isOccupied(rightOfBox)) {
+			rightAreaCount++;
+		}
+		if(isOccupied(rightAndForward)) {
+			rightAreaCount++;
+		}
+
+		if(leftAreaCount == 3
+				&& (unfinishedBoxAt(leftOfBox)
+						|| unfinishedBoxAt(leftAndForward) || unfinishedBoxAt(frontOfBox))) {
+			return true;
+		} else if(rightAreaCount == 3
+				&& (unfinishedBoxAt(rightOfBox)
+						|| unfinishedBoxAt(rightAndForward) || unfinishedBoxAt(frontOfBox))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
     /**
 	 * Checks if the last performed move triggers entering a tunnel, and keeps
@@ -140,7 +193,18 @@ public class State  implements Comparable<State> {
 				boolean targetNotDead		 = !Board.deadAt(boxDestination);
 						
 				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
-					childStates.add(new State(this, boxIndex, m));
+					State child = new State(this, boxIndex, m);
+					if(child.isSimpleDeadlock(boxIndex, m)) {
+						System.out.println();
+						System.out.println("Deadlock found:");
+						System.out.println("Parent:");
+						System.out.println(this);
+						System.out.println("Deadlocked child:");
+						System.out.println(child);
+						System.out.println();
+					} else {
+						childStates.add(child);
+					}
 				}
 			}
 		}
