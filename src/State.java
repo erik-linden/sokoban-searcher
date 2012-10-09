@@ -20,7 +20,7 @@ public class State  implements Comparable<State> {
 	
 	public BoardPosition[] boxPositions;
 	protected BoardConnectivity connectivity;
-	private Heuristics heuristics = new Heuristics();
+	private Heuristics heuristics;
 	private Integer hash = null;
 	protected int tunnelExtraPushes = 0;
 	
@@ -38,6 +38,7 @@ public class State  implements Comparable<State> {
 		if(parent == null) {
 			nSignificantMoves = 0;
 			this.indPushedLast = Heuristics.NoLastBox;
+			heuristics = new Heuristics();
 		} else {
 			nSignificantMoves = parent.nSignificantMoves+1;
 			this.indPushedLast = boxInd;
