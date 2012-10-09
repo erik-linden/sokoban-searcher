@@ -380,7 +380,11 @@ public class State  implements Comparable<State> {
 					result += "$";
 				}
 				else if(playerAt(i, j)) {
-					result += "@";
+					if(Board.goalAt(i, j)) {
+						result += "+";
+					} else {
+						result += "@";
+					}
 				}
 				else if(Board.goalAt(i, j)) {
 					result += ".";
