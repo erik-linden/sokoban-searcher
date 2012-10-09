@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -195,15 +194,7 @@ public class State  implements Comparable<State> {
 						
 				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
 					State child = new State(this, boxIndex, m);
-					if(child.isSimpleDeadlock(boxIndex, m)) {
-						System.out.println();
-						System.out.println("Deadlock found:");
-						System.out.println("Parent:");
-						System.out.println(this);
-						System.out.println("Deadlocked child:");
-						System.out.println(child);
-						System.out.println();
-					} else {
+					if(!child.isSimpleDeadlock(boxIndex, m)) {
 						childStates.add(child);
 					}
 				}
