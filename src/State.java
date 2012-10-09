@@ -37,12 +37,12 @@ public class State  implements Comparable<State> {
 		lastMove = move;
 		if(parent == null) {
 			nSignificantMoves = 0;
-			this.indPushedLast = Heuristics.NoLastBox;
+			indPushedLast = Heuristics.NoLastBox;
 			heuristics = new Heuristics();
 		} else {
 			nSignificantMoves = parent.nSignificantMoves+1;
-			this.indPushedLast = boxInd;
-			this.heuristics = new Heuristics(parent.heuristics);
+			indPushedLast = boxInd;
+			heuristics = new Heuristics(parent.heuristics);
 		}
 	}
 
