@@ -409,11 +409,6 @@ public class State  implements Comparable<State> {
 
 	@Override
 	public int compareTo(State other) {
-		if (this.heuristics.value == other.heuristics.value)
-            return 0;
-        else if (this.heuristics.value > other.heuristics.value)
-            return 1;
-        else
-            return -1;
+		return getHeuristicValue() - other.getHeuristicValue();
 	}
 }
