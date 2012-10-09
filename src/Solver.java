@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -195,16 +196,36 @@ public class Solver {
 					}
 
 					if(backwardVisited.contains(child)) {
-						System.out
-								.println("Found match with backward solution, time remaining: "
-										+ deadline.timeUntil() + " ms");
-						System.out.println("Matched state:");
+						System.out.println("Found match with backward solution!");
+						System.out.println("Time remaining: " + deadline.timeUntil() + " ms");
+						System.out.println("This state:");
 						System.out.println(child);
+						System.out.println("Matched state:");
+						backwardVisited.retainAll(Arrays
+								.asList(new State[]{child}));
+
+						State matched = backwardVisited.iterator().next();
+						System.out.println(matched);
+
+						String childMoves = reverseString(child.backtrackSolution());
+
+						System.out.println("Moves this far: " + childMoves);
+
+						String intermediateMoves =
+								reverseString(
+										child.getConnectivity().backtrackPathString(
+										matched.playerPosition,
+										child.playerPosition));
+						System.out.println("Intermediate moves: " + intermediateMoves);
+
+						String futureString = convertBackwardString(matched.backtrackSolution());
+						System.out.println("Future moves: " + futureString);
+
 						System.out.println("Future:");
-						for(State s = child.parent; s!=null; s=s.parent) {
+						for(State s = matched.parent; s != null; s = s.parent) {
 							System.out.println(s);
 						}
-						return "";
+						return childMoves + intermediateMoves + futureString;
 					}
 
 					int childCost = child.getNumberOfSignificantMoves() + child.getHeuristicValue();
