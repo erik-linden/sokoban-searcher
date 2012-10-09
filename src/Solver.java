@@ -63,7 +63,8 @@ public class Solver {
 		Board.setRandomNumbers();
 
 		Board.transformToBackward();
-		Set<State> backwardVisited = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
+		Set<State> backwardVisited =
+				backwardBFS(lines, new Deadline(deadline.timeUntil() * 2 / 3));
 
 		Board.initialize(lines);
 
