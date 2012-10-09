@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
+import java.util.PriorityQueue;
 
 public class Solver {
 
@@ -62,15 +62,16 @@ public class Solver {
 
 	private static State idaStar(Deadline deadline) {
 		HashSet<Integer> visited = new HashSet<Integer>();
-		Stack<State> nodesLeft = new Stack<State>();
+		PriorityQueue<State> nodesLeft = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
+		State parent;
 
 		int cutoff = Board.initialState.getHeuristicValue();
 
 		while(true) {
 			
 			int nextCutoff = Integer.MAX_VALUE;
-			nodesLeft.push(Board.initialState);
+			nodesLeft.add(Board.initialState);
 			visited.clear();
 						
 			System.out.println("Search depth: "+cutoff);
@@ -80,7 +81,7 @@ public class Solver {
 					return null;
 				}
 				
-				State parent = nodesLeft.pop();
+				parent = nodesLeft.poll();
 
 				if(!visited.contains(parent.hashCode())) {
 					visited.add(parent.hashCode());
