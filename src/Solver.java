@@ -1,8 +1,12 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Solver {
 
@@ -62,6 +66,70 @@ public class Solver {
 		return sol;
 	}
 
+	public static String solveCombo(ArrayList<String> lines, Deadline deadline) {
+		Board.initialize(lines);
+		Board.setRandomNumbers();
+
+		Board.transformToBackward();
+		Map<Integer, Integer> backwardResult = searchBackward(lines, new Deadline(deadline.timeUntil()/3));
+
+		Board.initialize(lines);
+
+		HashSet<Integer> visited = new HashSet<Integer>(1000000);
+
+		State solutionCandidate = informedIdaStar(backwardResult, visited, deadline);
+		if(solutionCandidate == null ) {
+			System.out.println("No solution found");
+			return "";
+		}
+
+		if(solutionCandidate.isSolved()) {
+			System.out.println("Solved in backward search");
+			return new StringBuilder(solutionCandidate.backtrackSolution()).reverse().toString();
+		}
+
+		State solvedState = fixedDepthAStar(solutionCandidate, visited, solutionCandidate.nSignificantMoves, deadline);
+		if(solvedState == null) {
+			System.out.println("No solution found");
+			return "";
+		}
+
+		return new StringBuilder(solvedState.backtrackSolution()).reverse().toString();
+
+	}
+
+	public static Map<Integer, Integer> searchBackward(ArrayList<String> lines, Deadline deadline) {
+		System.out.println("Searching from:");
+		System.out.println(Board.initialState);
+
+//		int maxDepth = 0;
+
+		Queue<State> q = new LinkedList<State>();
+		Map<Integer, Integer> visitedDepths = new HashMap<Integer, Integer>(1000000, 0.99f);
+
+		q.add(Board.initialState);
+		visitedDepths.put(Board.initialState.hashCode(), 0);
+
+		Collection<State> children = new LinkedList<State>();
+		int hash;
+
+		while(!q.isEmpty() && deadline.timeUntil() > 0) {
+			q.poll().getChildren(children);
+			for(State child : children) {
+				hash = child.hashCode();
+				if(!visitedDepths.containsKey(hash)) {
+					visitedDepths.put(hash, child.nSignificantMoves);
+					q.add(child);
+//					maxDepth = Math.max(maxDepth, child.nSignificantMoves);
+				}
+			}
+		}
+
+		System.out.println("Traversed " + visitedDepths.size() + " states");//, max depth " + maxDepth + ", time remaining: " + deadline.TimeUntil());
+
+		return visitedDepths;
+	}
+
 	private static State idaStar(HashSet<Integer> visited, Deadline deadline) {
 		PriorityQueue<State> nodesLeft = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
@@ -118,5 +186,109 @@ public class Solver {
 				return null;
 			}
 		}
+	}
+
+	private static State informedIdaStar(Map<Integer, Integer> backwardResult, HashSet<Integer> visited, Deadline deadline) {
+		PriorityQueue<State> q = new PriorityQueue<State>();
+		List<State> childStates = new LinkedList<State>();
+
+		int cutoff = Board.initialState.getHeuristicValue();
+
+		while(true) {
+
+			int nextCutoff = Integer.MAX_VALUE;
+			q.add(Board.initialState);
+			visited.clear();
+
+			System.out.println("Search depth: "+cutoff);
+
+			int childHash;
+
+			while(!q.isEmpty()) {
+
+				if(deadline.timeUntil()<0) {
+					return null;
+				}
+
+				q.poll().getChildren(childStates);
+
+				for(State child : childStates) {
+
+					childHash = child.hashCode();
+
+					if(!visited.add(childHash)) {
+						continue;
+					}
+
+					if(child.isSolved()) {
+						System.out.println("Solved in "
+								+ child.getNumberOfSignificantMoves()
+								+ " significant moves.");
+						return child;
+					}
+
+					if(backwardResult.containsKey(childHash)) {
+						System.out.println("Found match with backward solution at state:");
+						System.out.println(child);
+						return child;
+					}
+
+					int childCost = child.getNumberOfSignificantMoves() + child.getHeuristicValue();
+					if(childCost > cutoff) {
+						nextCutoff = Math.min(nextCutoff, childCost);
+					} else {
+						q.add(child);
+					}
+
+				}
+			}
+			if(cutoff < nextCutoff) {
+				cutoff = nextCutoff;
+			} else {
+				return null;
+			}
+		}
+	}
+
+	private static State fixedDepthAStar(State startState, HashSet<Integer> visited, int maxDepth, Deadline deadline) {
+		PriorityQueue<State> q = new PriorityQueue<State>();
+		List<State> childStates = new LinkedList<State>();
+		State parent;
+
+		maxDepth += startState.nSignificantMoves;
+
+		q.add(startState);
+		visited.clear();
+
+		System.out.println("Search depth: "+maxDepth);
+		while(!q.isEmpty() && deadline.timeUntil() > 0) {
+
+			parent = q.poll();
+
+			if(visited.add(parent.hashCode())) {
+
+				parent.getChildren(childStates);
+
+				for(State child : childStates) {
+
+					if(visited.contains(child.hashCode())) {
+						continue;
+					}
+
+					if(child.isSolved()) {
+						System.out.println("Solved in "
+								+ child.getNumberOfSignificantMoves()
+								+ " significant moves.");
+						return child;
+					}
+
+					if(child.nSignificantMoves <= maxDepth && !q.contains(child)) {
+						q.add(child);
+					}
+
+				}
+			}
+		}
+		return null;
 	}
 }

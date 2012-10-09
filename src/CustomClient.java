@@ -43,7 +43,7 @@ public class CustomClient {
 					System.out.println(lLine);
 				}
 
-				String sol = Solver.solve(lines, new Deadline(1000));
+				String sol = Solver.solveCombo(lines, new Deadline(1000));
 
 				System.out.println(sol);
 
