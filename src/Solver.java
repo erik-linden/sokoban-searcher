@@ -10,7 +10,7 @@ import java.util.Queue;
 
 public class Solver {
 
-	public static String solve(ArrayList<String> lines, Deadline deadline) {
+	public static String solveForward(ArrayList<String> lines, Deadline deadline) {
 		Board.initialize(lines);
 		Board.setRandomNumbers();
 
