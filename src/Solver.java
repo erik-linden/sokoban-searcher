@@ -105,8 +105,6 @@ public class Solver {
 		System.out.println("Searching from:");
 		System.out.println(Board.initialState);
 
-//		int maxDepth = 0;
-
 		Queue<State> q = new LinkedList<State>();
 		Map<Integer, Integer> visitedDepths = new HashMap<Integer, Integer>(1000000, 0.99f);
 
@@ -123,12 +121,9 @@ public class Solver {
 				if(!visitedDepths.containsKey(hash)) {
 					visitedDepths.put(hash, child.nSignificantMoves);
 					q.add(child);
-//					maxDepth = Math.max(maxDepth, child.nSignificantMoves);
 				}
 			}
 		}
-
-		System.out.println("Traversed " + visitedDepths.size() + " states");//, max depth " + maxDepth + ", time remaining: " + deadline.TimeUntil());
 
 		return visitedDepths;
 	}
