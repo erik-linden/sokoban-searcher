@@ -71,13 +71,13 @@ public class Solver {
 		Board.setRandomNumbers();
 
 		Board.transformToBackward();
-		Map<Integer, Integer> backwardResult = searchBackward(lines, new Deadline(deadline.timeUntil()/3));
+		Map<Integer, Integer> backwardResult = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
 
 		Board.initialize(lines);
 
 		HashSet<Integer> visited = new HashSet<Integer>(1000000);
 
-		State solutionCandidate = informedIdaStar(backwardResult, visited, deadline);
+		State solutionCandidate = searchForward(backwardResult, visited, deadline);
 		if(solutionCandidate == null ) {
 			System.out.println("No solution found");
 			return "";
@@ -98,7 +98,7 @@ public class Solver {
 
 	}
 
-	public static Map<Integer, Integer> searchBackward(ArrayList<String> lines, Deadline deadline) {
+	public static Map<Integer, Integer> backwardBFS(ArrayList<String> lines, Deadline deadline) {
 		System.out.println("Searching from:");
 		System.out.println(Board.initialState);
 
@@ -188,7 +188,7 @@ public class Solver {
 		}
 	}
 
-	private static State informedIdaStar(Map<Integer, Integer> backwardResult, HashSet<Integer> visited, Deadline deadline) {
+	private static State searchForward(Map<Integer, Integer> backwardResult, HashSet<Integer> visited, Deadline deadline) {
 		PriorityQueue<State> q = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
 
