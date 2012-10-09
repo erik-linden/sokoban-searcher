@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,7 @@ public class Solver {
 		String revSoloution = solvedState.backtrackSolution();
 		// new Guireplay(solvedState);
 
-		return new StringBuffer(revSoloution).reverse().toString();
+		return reverseString(revSoloution);
 	}
 
 	public static String solveBackward(ArrayList<String> lines, Deadline deadline) {
@@ -51,15 +52,7 @@ public class Solver {
 		System.out.println("Additional moves: " + preSolution);
 
 		String sol = preSolution + backSoloution;
-		sol = sol.replaceAll("R", "l");
-		sol = sol.replaceAll("L", "r");
-		sol = sol.replaceAll("U", "d");
-		sol = sol.replaceAll("D", "u");
-
-		sol = sol.replaceAll("r", "R");
-		sol = sol.replaceAll("l", "L");
-		sol = sol.replaceAll("u", "U");
-		sol = sol.replaceAll("d", "D");
+		sol = convertBackwardString(sol);
 
 		// new Guireplay(solvedState);
 
@@ -83,7 +76,7 @@ public class Solver {
 
 		if(solutionCandidate.isSolved()) {
 			System.out.println("Solved in " + solutionCandidate.getNumberOfSignificantMoves() + " significant moves");
-			return new StringBuilder(solutionCandidate.backtrackSolution()).reverse().toString();
+			return reverseString(solutionCandidate.backtrackSolution());
 		}
 
 		State solvedState =
@@ -95,7 +88,7 @@ public class Solver {
 			return "";
 		}
 
-		return new StringBuilder(solvedState.backtrackSolution()).reverse().toString();
+		return reverseString(solvedState.backtrackSolution());
 
 	}
 
@@ -291,5 +284,29 @@ public class Solver {
 			}
 		}
 		return null;
+	}
+
+	private static String reverseString(String s) {
+		return new StringBuilder(s).reverse().toString();
+	}
+
+	/**
+	 * Converts a backward string to a forward one, or vice versa. More
+	 * precisely, flips "R"<->"L" and "U"<->"D".
+	 *
+	 * @param sol the {@link String} to convert
+	 * @return
+	 */
+	private static String convertBackwardString(String sol) {
+		sol = sol.replaceAll("R", "l");
+		sol = sol.replaceAll("L", "r");
+		sol = sol.replaceAll("U", "d");
+		sol = sol.replaceAll("D", "u");
+
+		sol = sol.replaceAll("r", "R");
+		sol = sol.replaceAll("l", "L");
+		sol = sol.replaceAll("u", "U");
+		sol = sol.replaceAll("d", "D");
+		return sol;
 	}
 }
