@@ -88,7 +88,7 @@ public class Solver {
 			return new StringBuilder(solutionCandidate.backtrackSolution()).reverse().toString();
 		}
 
-		State solvedState = fixedDepthAStar(solutionCandidate, visited, solutionCandidate.nSignificantMoves, deadline);
+		State solvedState = fixedDepthAStar(solutionCandidate, visited, backwardResult.get(solutionCandidate.hashCode()), deadline);
 		if(solvedState == null) {
 			System.out.println("No solution found");
 			return "";
