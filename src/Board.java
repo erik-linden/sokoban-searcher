@@ -72,7 +72,7 @@ public class Board {
 	 */
 	public static void initialize(ArrayList<String> lines) {
 		rows = (byte) lines.size();
-		cols = (byte) 0;
+		cols = 0;
 
 		for(String r : lines) {
 			cols = (byte) Math.max(cols, r.length());
@@ -81,7 +81,7 @@ public class Board {
 		/*
 		 * Pad the sides so we don't have to worry about edge effects.
 		 */
-		board   = new byte[rows+2][cols+2];
+		board = new byte[rows+2][cols+2];
 
 		BoardPosition playerPosition = null;
 		Collection<BoardPosition> boxPositions = new LinkedList<BoardPosition>();
