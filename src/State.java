@@ -218,6 +218,16 @@ public class State  implements Comparable<State> {
 		
 		return false;
 	}
+
+	/**
+	 * Alias of <code>boxAt(pos) && !Board.goalAt(pos)</code>
+	 * 
+	 * @return <code>true</code> iff there is a box at <code>pos</code> and
+	 *         <code>pos</code> is not a goal.
+	 */
+	public boolean unfinishedBoxAt(BoardPosition pos) {
+		return boxAt(pos) && !Board.goalAt(pos);
+	}
 	
 	public BoardPosition[] getBoxPositions() {
 		return boxPositions;
