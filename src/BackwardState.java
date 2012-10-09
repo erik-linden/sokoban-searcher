@@ -26,7 +26,7 @@ public class BackwardState extends State {
 	 * @param move the direction in which to pull the box
 	 */
 	public BackwardState(State parent, int boxIndex, Move move) {
-		super(parent, move.stepFrom(parent.boxPositions[boxIndex], 2), parent.boxPositions, move, Heuristics.NoLastBox);
+		super(parent, move.stepFrom(parent.boxPositions[boxIndex], 2), parent.boxPositions, move, boxIndex);
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
 	}
 	
