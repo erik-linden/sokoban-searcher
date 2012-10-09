@@ -8,6 +8,7 @@ public class Solver {
 
 	public static String solve(ArrayList<String> lines, Deadline deadline) {
 		Board.initialize(lines);
+		Board.setRandomNumbers();
 
 		System.out.println("Board to solve:");
 		System.out.println(Board.initialState);
@@ -24,7 +25,8 @@ public class Solver {
 
 	public static String solveBackward(ArrayList<String> lines, Deadline deadline) {
 		Board.initialize(lines);
-		Board.initializeBackward();
+		Board.setRandomNumbers();
+		Board.transformToBackward();
 
 		System.out.println("Board to solve:");
 		System.out.println(Board.initialState);

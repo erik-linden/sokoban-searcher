@@ -54,6 +54,15 @@ public class Board {
 	 */
 	private Board() {};
 
+	public static void setRandomNumbers() {
+		Random random = new Random();
+		zValues = new int[rows+2][cols+2];
+		for(int i=0; i<zValues.length; ++i) {
+			for(int j=0; j<zValues[i].length; ++j) {
+				zValues[i][j] = random.nextInt();
+			}
+		}
+	}
 	/**
 	 * Initializes the board using a vector of strings supplied from the course
 	 * server.
@@ -73,19 +82,16 @@ public class Board {
 		 * Pad the sides so we don't have to worry about edge effects.
 		 */
 		board   = new byte[rows+2][cols+2];
-		zValues = new int[rows+2][cols+2];
 
 		BoardPosition playerPosition = null;
 		Collection<BoardPosition> boxPositions = new LinkedList<BoardPosition>();
 		List<BoardPosition> goalPositions = new ArrayList<BoardPosition>();
 
-		Random random = new Random();
 		for (byte i=1; i<=rows; i++) {
 			String line = lines.get(i-1);
 			for (byte j=1; j<=line.length(); j++) {
 				char character = line.charAt(j-1);
 
-				zValues[i][j] = random.nextInt();
 				board[i][j] = FLOOR;
 				switch (character) {
 				case '#':	// wall
@@ -118,12 +124,12 @@ public class Board {
 			}
 		}
 		Board.goalPositions = goalPositions.toArray(new BoardPosition[goalPositions.size()]);
-
 		markDead();
+
 		initialState = new State(playerPosition, boxPositions.toArray(new BoardPosition[boxPositions.size()]));
 	}
 	
-	public static void initializeBackward() {
+	public static void transformToBackward() {
         BackwardState.playerStartPosition = initialState.playerPosition;
         
         BoardPosition[] oldGoals = goalPositions;
