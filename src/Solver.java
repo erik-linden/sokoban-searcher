@@ -1,13 +1,11 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 public class Solver {
 
@@ -64,53 +62,30 @@ public class Solver {
 		Board.setRandomNumbers();
 
 		Board.transformToBackward();
-		Map<Integer, Integer> backwardVisited = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
+		Set<State> backwardVisited = backwardBFS(lines, new Deadline(deadline.timeUntil()/3));
 
 		Board.initialize(lines);
 
-		State solutionCandidate = searchForward(backwardVisited, deadline);
-		if(solutionCandidate == null ) {
-			System.out.println("No solution found");
-			return "";
-		}
-
-		if(solutionCandidate.isSolved()) {
-			System.out.println("Solved in " + solutionCandidate.getNumberOfSignificantMoves() + " significant moves");
-			return reverseString(solutionCandidate.backtrackSolution());
-		}
-
-		State solvedState =
-				fixedDepthAStar(solutionCandidate,
-						backwardVisited.get(solutionCandidate.hashCode())
-								+ solutionCandidate.nSignificantMoves, deadline);
-		if(solvedState == null) {
-			System.out.println("No solution found");
-			return "";
-		}
-
-		return reverseString(solvedState.backtrackSolution());
+		return searchForward(backwardVisited, deadline);
 
 	}
 
-	public static Map<Integer, Integer> backwardBFS(ArrayList<String> lines, Deadline deadline) {
+	public static Set<State> backwardBFS(ArrayList<String> lines, Deadline deadline) {
 		System.out.println("Searching from:");
 		System.out.println(Board.initialState);
 
 		Queue<State> q = new LinkedList<State>();
-		Map<Integer, Integer> visitedDepths = new HashMap<Integer, Integer>(1000000, 0.99f);
+		Set<State> visitedDepths = new HashSet<State>(1000000, 0.99f);
 
 		q.add(Board.initialState);
-		visitedDepths.put(Board.initialState.hashCode(), 0);
+		visitedDepths.add(Board.initialState);
 
 		Collection<State> children = new LinkedList<State>();
-		int hash;
 
 		while(!q.isEmpty() && deadline.timeUntil() > 0) {
 			q.poll().getChildren(children);
 			for(State child : children) {
-				hash = child.hashCode();
-				if(!visitedDepths.containsKey(hash)) {
-					visitedDepths.put(hash, child.nSignificantMoves);
+				if(visitedDepths.add(child)) {
 					q.add(child);
 				}
 			}
@@ -179,7 +154,7 @@ public class Solver {
 		}
 	}
 
-	private static State searchForward(Map<Integer, Integer> backwardVisited, Deadline deadline) {
+	private static String searchForward(Set<State> backwardVisited, Deadline deadline) {
 		HashSet<Integer> visited = new HashSet<Integer>();
 		PriorityQueue<State> q = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
@@ -216,17 +191,20 @@ public class Solver {
 						System.out.println("Solved in "
 								+ child.getNumberOfSignificantMoves()
 								+ " significant moves.");
-						return child;
+						return new StringBuilder(child.backtrackSolution()).reverse().toString();
 					}
 
-					if(backwardVisited.containsKey(childHash)) {
+					if(backwardVisited.contains(child)) {
 						System.out
-								.println("Found match with backward solution at hash "
-										+ childHash
-										+ ", time remaining: "
+								.println("Found match with backward solution, time remaining: "
 										+ deadline.timeUntil() + " ms");
+						System.out.println("Matched state:");
 						System.out.println(child);
-						return child;
+						System.out.println("Future:");
+						for(State s = child.parent; s!=null; s=s.parent) {
+							System.out.println(s);
+						}
+						return "";
 					}
 
 					int childCost = child.getNumberOfSignificantMoves() + child.getHeuristicValue();
