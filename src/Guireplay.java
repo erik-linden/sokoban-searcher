@@ -91,4 +91,9 @@ public class Guireplay extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	private void revalidate() {
+	    invalidate();
+	    validate();
+	}
 }
