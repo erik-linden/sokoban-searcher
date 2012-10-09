@@ -88,7 +88,10 @@ public class Solver {
 			return new StringBuilder(solutionCandidate.backtrackSolution()).reverse().toString();
 		}
 
-		State solvedState = fixedDepthAStar(solutionCandidate, visited, backwardResult.get(solutionCandidate.hashCode()), deadline);
+		State solvedState =
+				fixedDepthAStar(solutionCandidate, visited,
+						backwardResult.get(solutionCandidate.hashCode())
+								+ solutionCandidate.nSignificantMoves, deadline);
 		if(solvedState == null) {
 			System.out.println("No solution found");
 			return "";
@@ -254,8 +257,6 @@ public class Solver {
 		PriorityQueue<State> q = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
 		State parent;
-
-		maxDepth += startState.nSignificantMoves;
 
 		q.add(startState);
 		visited.clear();
