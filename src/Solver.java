@@ -75,9 +75,7 @@ public class Solver {
 
 		Board.initialize(lines);
 
-		HashSet<Integer> visited = new HashSet<Integer>(1000000);
-
-		State solutionCandidate = searchForward(backwardResult, visited, deadline);
+		State solutionCandidate = searchForward(backwardResult, deadline);
 		if(solutionCandidate == null ) {
 			System.out.println("No solution found");
 			return "";
@@ -89,7 +87,7 @@ public class Solver {
 		}
 
 		State solvedState =
-				fixedDepthAStar(solutionCandidate, visited,
+				fixedDepthAStar(solutionCandidate,
 						backwardResult.get(solutionCandidate.hashCode())
 								+ solutionCandidate.nSignificantMoves, deadline);
 		if(solvedState == null) {
@@ -186,7 +184,8 @@ public class Solver {
 		}
 	}
 
-	private static State searchForward(Map<Integer, Integer> backwardResult, HashSet<Integer> visited, Deadline deadline) {
+	private static State searchForward(Map<Integer, Integer> backwardResult, Deadline deadline) {
+		HashSet<Integer> visited = new HashSet<Integer>();
 		PriorityQueue<State> q = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
 
@@ -248,13 +247,13 @@ public class Solver {
 		}
 	}
 
-	private static State fixedDepthAStar(State startState, HashSet<Integer> visited, int maxDepth, Deadline deadline) {
+	private static State fixedDepthAStar(State startState, int maxDepth, Deadline deadline) {
+		HashSet<Integer> visited = new HashSet<Integer>();
 		PriorityQueue<State> q = new PriorityQueue<State>();
 		List<State> childStates = new LinkedList<State>();
 		State parent;
 
 		q.add(startState);
-		visited.clear();
 
 		System.out.println("Search depth: "+maxDepth);
 		while(!q.isEmpty() && deadline.timeUntil() > 0) {
