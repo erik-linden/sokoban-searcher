@@ -37,28 +37,39 @@ public class BoardConnectivity {
 	 * @param state State checked for connectivity
 	 */
 	private void initialize(State state) {
-		Queue<BoardPosition> positionsToExpand = new LinkedList<BoardPosition>();
-
-		positionsToExpand.add(state.playerPosition);
-		byte playerRow = state.playerPosition.row;
-		byte playerCol = state.playerPosition.col;
-
-		// The players position is reached via the null move.
-		connectivity[playerRow][playerCol] = Move.NULL;
-
-		while(!positionsToExpand.isEmpty()) {
-
-			BoardPosition currenPos = positionsToExpand.poll();
-
-			for(Move move : Move.DIRECTIONS) {
-				BoardPosition toPos = move.stepFrom(currenPos);
-
-				if(!state.isOccupied(toPos) && connectivity[toPos.row][toPos.col] == Move.NO_MOVE) {
-					connectivity[toPos.row][toPos.col] =  move;
-					positionsToExpand.add(toPos);
-				}
-			}
-		}
+	    if(state.playerPosition == null) {
+	        // We may start anywhere we like. This is the case for backward search.
+	        for(byte i=1; i<connectivity.length; ++i) {
+	            for(byte j=0; j<connectivity[i].length; ++j) {
+	                if(!state.isOccupied(new BoardPosition(i, j))) {
+	                    connectivity[i][j] = Move.NULL;
+	                }
+	            }
+	        }
+	    } else {
+    		Queue<BoardPosition> positionsToExpand = new LinkedList<BoardPosition>();
+    
+    		positionsToExpand.add(state.playerPosition);
+    		byte playerRow = state.playerPosition.row;
+    		byte playerCol = state.playerPosition.col;
+    
+    		// The players position is reached via the null move.
+    		connectivity[playerRow][playerCol] = Move.NULL;
+    
+    		while(!positionsToExpand.isEmpty()) {
+    
+    			BoardPosition currenPos = positionsToExpand.poll();
+    
+    			for(Move move : Move.DIRECTIONS) {
+    				BoardPosition toPos = move.stepFrom(currenPos);
+    
+    				if(!state.isOccupied(toPos) && connectivity[toPos.row][toPos.col] == Move.NO_MOVE) {
+    					connectivity[toPos.row][toPos.col] =  move;
+    					positionsToExpand.add(toPos);
+    				}
+    			}
+    		}
+	    }
 	}
 	
 	public List<Move> backtrackPathMoves(BoardPosition endPos, BoardPosition startPos) {

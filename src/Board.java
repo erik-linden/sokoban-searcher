@@ -122,6 +122,24 @@ public class Board {
 		markDead();
 		initialState = new State(playerPosition, boxPositions.toArray(new BoardPosition[boxPositions.size()]));
 	}
+	
+	public static void initializeBackward() {
+        BackwardState.playerStartPosition = initialState.playerPosition;
+        
+        BoardPosition[] oldGoals = goalPositions;
+        
+        for(BoardPosition p : oldGoals) {
+            board[p.row][p.col] -= GOAL;
+        }
+        
+        BoardPosition[] oldBoxes = initialState.boxPositions;
+        
+        goalPositions = oldBoxes;
+        for(BoardPosition p : goalPositions) {
+            board[p.row][p.col] |= GOAL;
+        }
+        initialState = new BackwardState(oldGoals);
+	}
 
 	/**
 	 * Marks dead-end squares, from which a box cannot be pushed to a goal.

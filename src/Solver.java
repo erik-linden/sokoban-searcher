@@ -10,16 +10,54 @@ public class Solver {
 		Board.initialize(lines);
 
 		System.out.println("Board to solve:");
-		System.out.println(Board.ToString());
-		
+		System.out.println(Board.initialState);
+
 		State solvedState = idaStar(deadline);
 		if(solvedState == null) {
 			return "";
 		}
 		String revSoloution = solvedState.backtrackSolution();
-//		new Guireplay(solvedState);
+		// new Guireplay(solvedState);
 
-		return  new StringBuffer(revSoloution).reverse().toString();
+		return new StringBuffer(revSoloution).reverse().toString();
+	}
+
+	public static String solveBackward(ArrayList<String> lines, Deadline deadline) {
+		Board.initialize(lines);
+		Board.initializeBackward();
+
+		System.out.println("Board to solve:");
+		System.out.println(Board.initialState);
+
+		State solvedState = idaStar(deadline);
+		System.out.println("Solved state:");
+		System.out.println(solvedState);
+
+		if(solvedState == null) {
+			return "";
+		}
+		String backSoloution = solvedState.backtrackSolution();
+		String preSolution =
+				solvedState.connectivity.backtrackPathString(
+						BackwardState.playerStartPosition,
+						solvedState.playerPosition);
+
+		System.out.println("Additional moves: " + preSolution);
+
+		String sol = preSolution + backSoloution;
+		sol = sol.replaceAll("R", "l");
+		sol = sol.replaceAll("L", "r");
+		sol = sol.replaceAll("U", "d");
+		sol = sol.replaceAll("D", "u");
+
+		sol = sol.replaceAll("r", "R");
+		sol = sol.replaceAll("l", "L");
+		sol = sol.replaceAll("u", "U");
+		sol = sol.replaceAll("d", "D");
+
+		// new Guireplay(solvedState);
+
+		return sol;
 	}
 
 	private static State idaStar(Deadline deadline) {
@@ -56,7 +94,9 @@ public class Solver {
 						}
 
 						if(child.isSolved()) {
-							System.out.println("Solved in "+child.getNumberOfSignificantMoves() +" pushes.");
+							System.out.println("Solved in "
+									+ child.getNumberOfSignificantMoves()
+									+ " significant moves.");
 							return child;
 						}
 

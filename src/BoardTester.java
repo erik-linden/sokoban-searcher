@@ -68,10 +68,15 @@ public class BoardTester {
 		
 		br.close();
 		
-		String sol = Solver.solve(lines, new Deadline(30000));
+        String sol = Solver.solve(lines, new Deadline(30000));
+        String solb = Solver.solveBackward(lines, new Deadline(30000));
         
-		System.out.println("Solution:");
+        System.out.println();
+        
+        System.out.println("Solution:");
         System.out.println(sol);
+        System.out.println("Backward solution:");
+        System.out.println(solb);
 	}
 
 }

@@ -18,11 +18,11 @@ public class State  implements Comparable<State> {
 	public final int indPushedLast;
 	protected int nSignificantMoves;
 	
-	protected BoardPosition[] boxPositions;
+	public BoardPosition[] boxPositions;
 	protected BoardConnectivity connectivity;
 	private Heuristics heuristics = new Heuristics();
 	private Integer hash = null;
-	private int tunnelExtraPushes = 0;
+	protected int tunnelExtraPushes = 0;
 	
 	protected State(State parent, BoardPosition playerPosition, BoardPosition[] boxPositions, Move move, int boxInd) {
 		this.parent = parent;
@@ -210,7 +210,9 @@ public class State  implements Comparable<State> {
 	}
 
 	private boolean playerAt(byte row, byte col) {
-		if (playerPosition.row == row && playerPosition.col == col) {
+		if (playerPosition != null
+		        && playerPosition.row == row
+		        && playerPosition.col == col) {
 			return true;
 		}
 		

@@ -36,10 +36,11 @@ public class Guireplay extends JFrame {
 
 		State parent = solutionStack.pop();
 		while(solutionStack.size()>0) {
-			BoardPosition playerPos = parent.playerPosition;
-			con.add(getPlot(parent, playerPos));
-			revalidate();
-			pause();
+		    if(parent.playerPosition != null) {
+		        con.add(getPlot(parent, parent.playerPosition));
+		        revalidate();
+		        pause();
+		    }
 
 			State child = solutionStack.pop();
 
