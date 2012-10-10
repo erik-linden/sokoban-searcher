@@ -273,7 +273,7 @@ public class Solver {
 						return child;
 					}
 
-					if(child.nSignificantMoves <= maxDepth && !q.contains(child)) {
+					if(child.getNumberOfSignificantMoves() <= maxDepth && !q.contains(child)) {
 						q.add(child);
 					}
 
