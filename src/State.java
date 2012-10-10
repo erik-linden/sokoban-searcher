@@ -365,37 +365,37 @@ public class State  implements Comparable<State> {
 
 	@Override
 	public String toString() {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		
 		for(byte i=1; i<=Board.rows; i++) {
 			for(byte j=1; j<=Board.cols; j++) {
 				if(boxAt(i, j) && Board.goalAt(i, j)){
-					result += "*";
+					result.append("*");
 				}
 				else if(boxAt(i, j)){
-					result += "$";
+					result.append("$");
 				}
 				else if(playerAt(i, j)) {
 					if(Board.goalAt(i, j)) {
-						result += "+";
+						result.append("+");
 					} else {
-						result += "@";
+						result.append("@");
 					}
 				}
 				else if(Board.goalAt(i, j)) {
-					result += ".";
+					result.append(".");
 				}
 				else if(Board.wallAt(i, j)) {
-					result += "#";
+					result.append("#");
 				}
 				else {
-					result += " ";
+					result.append(" ");
 				}
 			}
-			result += "\n";
+			result.append("\n");
 		}
 		
-		return result;
+		return result.toString();
 	}
 
 	@Override
