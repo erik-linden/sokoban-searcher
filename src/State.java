@@ -150,8 +150,7 @@ public class State  implements Comparable<State> {
 		childStates.clear();
 
 		State child;
-		BoardPosition boxDestination;
-		BoardPosition playerPos;
+		BoardPosition boxDestination, playerPos;
 
 		for(int boxIndex=0; boxIndex<boxPositions.length; boxIndex++) {
 			for(Move m : Move.DIRECTIONS) {
