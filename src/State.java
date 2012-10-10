@@ -68,7 +68,6 @@ public class State  implements Comparable<State> {
 	public State(State parent, int boxIndex, Move move) {
 		this(parent, parent.boxPositions[boxIndex], parent.boxPositions, move, boxIndex);
 		boxPositions[boxIndex] = move.stepFrom(boxPositions[boxIndex]);
-//		tunnelMacro(boxIndex, move);
 	}
 
 	public String backtrackSolution() {
@@ -143,38 +142,6 @@ public class State  implements Comparable<State> {
 		}
 	}
 
-
-    /**
-	 * Checks if the last performed move triggers entering a tunnel, and keeps
-	 * pushing the box until it reaches the end of the tunnel.
-	 *
-	 * @param boxIndex the box that was just pushed
-	 * @param direction the move that was performed on the box
-	 */
-	protected void tunnelMacro(int boxIndex, Move direction) {
-		Move perpL = direction.perpendicular();
-		Move perpR = perpL.opposite();
-
-		// Check if the box is within the tunnel already
-		BoardPosition frontOfBox = direction.stepFrom(boxPositions[boxIndex]);
-		if(isOccupied(frontOfBox)
-				|| !Board.wallAt(perpL.stepFrom(boxPositions[boxIndex]))
-				|| !Board.wallAt(perpR.stepFrom(boxPositions[boxIndex]))) {
-			return;
-		}
-
-		// Keep going forward while in the tunnel
-		while(!isOccupied(frontOfBox)
-				&& Board.wallAt(perpL.stepFrom(frontOfBox))
-				&& Board.wallAt(perpR.stepFrom(frontOfBox))) {
-			++tunnelExtraPushes;
-			frontOfBox = direction.stepFrom(frontOfBox);
-		}
-		nSignificantMoves += tunnelExtraPushes;
-		boxPositions[boxIndex] = direction.stepBack(frontOfBox);
-		playerPosition = direction.stepBack(boxPositions[boxIndex]);
-	}
-	
 	public boolean isSolved() {
 		return numBoxesOnGoals() == Board.goalPositions.length;
 	}

@@ -31,11 +31,6 @@ public class BackwardState extends State {
 	}
 	
 	@Override
-	protected void tunnelMacro(int boxIndex, Move direction) {
-		throw new NotImplementedException();
-	}
-	
-	@Override
 	public boolean isSolved() {
 	    return super.isSolved() && connectivity.isReachable(playerStartPosition);
 	}
