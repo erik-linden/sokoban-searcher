@@ -60,4 +60,15 @@ public class BackwardState extends State {
 			}
 		}
 	}
+
+	/**
+	 * Overrides {@link State#getHeuristicValue()} in order to save time, since
+	 * backward search is performed without heuristic.
+	 *
+	 * @return always zero.
+	 */
+	@Override
+	public int getHeuristicValue() {
+		return 0;
+	}
 }
