@@ -149,18 +149,20 @@ public class State  implements Comparable<State> {
 	public void getChildren(Collection<State> childStates) {
 		childStates.clear();
 
+		State child;
+		BoardPosition boxDestination;
+		BoardPosition playerPos;
+
 		for(int boxIndex=0; boxIndex<boxPositions.length; boxIndex++) {
 			for(Move m : Move.DIRECTIONS) {
-				BoardPosition boxDestination = m.stepFrom(boxPositions[boxIndex]);
+				boxDestination = m.stepFrom(boxPositions[boxIndex]);
+				playerPos = m.opposite().stepFrom(boxPositions[boxIndex]);
 				
-				BoardPosition playerPos = m.opposite().stepFrom(boxPositions[boxIndex]);
-				
-				boolean playerPosReachable   = getConnectivity().isReachable(playerPos);
-				boolean pushTargetUnOccupied = !isOccupied(boxDestination);
-				boolean targetNotDead		 = !Board.deadAt(boxDestination);
-						
-				if(playerPosReachable && pushTargetUnOccupied && targetNotDead) {
-					State child = new State(this, boxIndex, m);
+				if(!Board.deadAt(boxDestination)
+						&& getConnectivity().isReachable(playerPos)
+						&& !isOccupied(boxDestination)) {
+
+					child = new State(this, boxIndex, m);
 					if(!child.isSimpleDeadlock(boxIndex, m)) {
 						childStates.add(child);
 					}
