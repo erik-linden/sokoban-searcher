@@ -10,6 +10,16 @@ import java.util.Set;
 
 public class Solver {
 
+	public static final long DEFAULT_DEADLINE_TIME = 60000;
+
+	public static String solve(ArrayList<String> lines, Deadline deadline) {
+		return solveCombo(lines, deadline);
+	}
+
+	public static String solve(ArrayList<String> lines) {
+		return solve(lines, new Deadline(DEFAULT_DEADLINE_TIME));
+	}
+
 	public static String solveForward(ArrayList<String> lines, Deadline deadline) {
 		Board.initialize(lines);
 		Board.setRandomNumbers();

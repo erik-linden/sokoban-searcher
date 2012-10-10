@@ -36,7 +36,7 @@ public class Client {
             }
     
             //we've found our solution
-            String lMySol = Solver.solveForward(lines, new Deadline(3600000));
+            String lMySol = Solver.solve(lines);
             //these formats are also valid:
             //String lMySol="URRUULDLLULLDRRRRLDDRURUDLLUR";
             //String lMySol="0 3 3 0 0 2 1 2 2 0 2 2 1 3 3 3 3 2 1 1 3 0 3 0 1 2 2 0 3";
