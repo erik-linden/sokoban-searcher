@@ -1,7 +1,5 @@
 import java.util.Collection;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class BackwardState extends State {
     
     /**
@@ -39,17 +37,16 @@ public class BackwardState extends State {
 	public void getChildren(Collection<State> childStates) {
 		childStates.clear();
 
+		BoardPosition boxDestination, playerEndPos;
+
 		for(int boxIndex=0; boxIndex<boxPositions.length; boxIndex++) {
 			for(Move m : Move.DIRECTIONS) {
-				BoardPosition boxDestination = m.stepFrom(boxPositions[boxIndex]);
+				boxDestination = m.stepFrom(boxPositions[boxIndex]);
+				playerEndPos = m.stepFrom(boxPositions[boxIndex], 2);
 				
-				BoardPosition playerEndPos = m.stepFrom(boxPositions[boxIndex], 2);
-				
-				boolean playerStartReachable   = connectivity.isReachable(boxDestination);
-				boolean playerEndReachable   = connectivity.isReachable(playerEndPos);
-				boolean boxDestinationUnOccupied = !isOccupied(boxDestination);
-						
-				if(playerStartReachable && playerEndReachable && boxDestinationUnOccupied) {
+				if(connectivity.isReachable(boxDestination)
+						&& connectivity.isReachable(playerEndPos)
+						&& !isOccupied(boxDestination)) {
 					childStates.add(new BackwardState(this, boxIndex, m));
 				}
 			}
