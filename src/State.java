@@ -336,10 +336,6 @@ public class State  implements Comparable<State> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof State) {
-			return equals((State) obj);
-		}
-
 		return false;
 	}
 
@@ -350,10 +346,10 @@ public class State  implements Comparable<State> {
 	 * @param state
 	 * @return
 	 */
-	private boolean equals(State state) {
+	public boolean equals(State other) {
 		for(BoardPosition boxPos : boxPositions) {
 			boolean contained = false;
-			for(BoardPosition otherPos : state.boxPositions) {
+			for(BoardPosition otherPos : other.boxPositions) {
 				if(otherPos.equals(boxPos)) {
 					contained = true;
 					break;
@@ -364,7 +360,7 @@ public class State  implements Comparable<State> {
 			}
 		}
 
-	    return state.getConnectivity().equals(getConnectivity());
+	    return other.getConnectivity().equals(getConnectivity());
 	}
 
 	@Override
