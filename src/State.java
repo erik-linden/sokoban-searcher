@@ -269,10 +269,7 @@ public class State  implements Comparable<State> {
 	}
 
 	public int getHeuristicValue() {
-		if(heuristics.value == null) {
-			heuristics.calculateHeuristic(this);
-		}
-		return heuristics.value;
+		return heuristics.getValue(this);
 	}
 
 	/**

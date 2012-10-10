@@ -6,20 +6,30 @@ public class Heuristics {
 
 	static final byte VeryFar   = Byte.MAX_VALUE;
 	static final byte NoLastBox = -1;
-	int[][] costMat = new int[Board.goalPositions.length][Board.goalPositions.length];
-	Integer value = null;
-
-	public void calculateHeuristic(State state) {
-		bipartDist(state);
-	}
-	
-	Heuristics(Heuristics h) {
-		this.costMat = h.costMat.clone();
-		this.value   = null; 
-	}
+	private int[][] costMat;
+	private Integer value = null;
 
 	public Heuristics() {
-		// TODO Auto-generated constructor stub
+		costMat = new int[Board.goalPositions.length][Board.goalPositions.length];
+	}
+	
+	public Heuristics(Heuristics h) {
+		costMat = new int[Board.goalPositions.length][];
+		for(int i=0; i<costMat.length; ++i) {
+			costMat[i] = h.costMat[i].clone();
+		}
+	}
+
+	private int calculateHeuristic(State state) {
+		return bipartDist(state);
+	}
+
+
+	public int getValue(State state) {
+		if(value == null) {
+			value = calculateHeuristic(state);
+		}
+		return value;
 	}
 
 	private int manhattanDist(State state) {
@@ -40,21 +50,20 @@ public class Heuristics {
 		return distance;
 	}
 
-	private void bipartDist(State state) {
+	private int bipartDist(State state) {
 		int indLastPushed = state.indPushedLast;
 		if(indLastPushed == NoLastBox) {
 			for(int i=0; i<Board.goalPositions.length; i++) {
 				costMat[i] = listGoalDistances(state, i);
 			}
-		}
-		else {
+		} else {
 			costMat[indLastPushed] = listGoalDistances(state, indLastPushed);
 		}
 
-		value = HungarianAlgorithm.hgAlgorithm(costMat, "min");
+		return HungarianAlgorithm.hgAlgorithm(costMat, "min");
 	}
 
-	protected int[] listGoalDistances(State state, int boxInd) {
+	private int[] listGoalDistances(State state, int boxInd) {
 		byte[][] distMat = new byte[Board.rows+2][Board.cols+2];
 		BoardPosition start = state.getBox(boxInd);
 		byte goalsFound = 0;
@@ -90,17 +99,15 @@ public class Heuristics {
 		}
 
 		int[] goalDist = new int[Board.goalPositions.length];
-		byte i = 0;
 
-		for(BoardPosition goal : Board.goalPositions) {
-			goalDist[i] = distMat[goal.row][goal.col];
-			i++;
+		for(int i=0; i<Board.goalPositions.length; ++i) {
+			goalDist[i] = distMat[Board.goalPositions[i].row][Board.goalPositions[i].col];
 		}
 
 		return goalDist;
 	}
 
-	static String distancesToString(byte[][] distMat) {
+	public static String distancesToString(byte[][] distMat) {
 		String result = "";
 
 		for(byte i=1; i<=Board.rows; i++) {
