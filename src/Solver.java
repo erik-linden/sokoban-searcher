@@ -77,25 +77,25 @@ public class Solver {
 		System.out.println(Board.initialState);
 
 		Queue<State> q = new LinkedList<State>();
-		Set<State> visitedDepths = new HashSet<State>(1000000, 0.99f);
+		Set<State> visited = new HashSet<State>(1000000, 0.99f);
 
 		q.add(Board.initialState);
-		visitedDepths.add(Board.initialState);
+		visited.add(Board.initialState);
 
 		Collection<State> children = new LinkedList<State>();
 
 		while(!q.isEmpty() && deadline.timeUntil() > 0) {
 			q.poll().getChildren(children);
 			for(State child : children) {
-				if(visitedDepths.add(child)) {
+				if(visited.add(child)) {
 					q.add(child);
 				}
 			}
 		}
 
-		System.out.println("Backward search visited " + visitedDepths.size() + " states");
+		System.out.println("Backward search visited " + visited.size() + " states");
 
-		return visitedDepths;
+		return visited;
 	}
 
 	private static State idaStar(HashSet<Integer> visited, Deadline deadline) {
