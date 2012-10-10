@@ -11,7 +11,7 @@ import java.util.Set;
 public class Solver {
 
 	public static final long DEFAULT_DEADLINE_TIME = 60000;
-	public static final long COMBO_SOLVER_BACKWARD_TIME = 20000;
+	public static final double COMBO_SOLVER_BACKWARD_TIME = 0.33;
 
 	public static String solve(ArrayList<String> lines, Deadline deadline) {
 		return solveCombo(lines, deadline);
@@ -75,7 +75,7 @@ public class Solver {
 
 		Board.transformToBackward();
 		Set<State> backwardVisited =
-				backwardBFS(lines, new Deadline(COMBO_SOLVER_BACKWARD_TIME));
+				backwardBFS(lines, new Deadline((long) (deadline.timeUntil() * COMBO_SOLVER_BACKWARD_TIME)));
 
 		Board.initialize(lines);
 
