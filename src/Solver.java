@@ -208,36 +208,22 @@ public class Solver {
 					}
 
 					if(backwardVisited.contains(child)) {
-						System.out.println("Found match with backward solution!");
+						System.out
+								.println("Found match with backward solution at depth "
+										+ child.getNumberOfSignificantMoves());
 						System.out.println("Time remaining: " + deadline.timeUntil() + " ms");
-//						System.out.println("This state:");
-//						System.out.println(child);
-//						System.out.println("Matched state:");
 						backwardVisited.retainAll(Arrays
 								.asList(new State[]{child}));
 
 						State matched = backwardVisited.iterator().next();
-//						System.out.println(matched);
 
-						String childMoves = reverseString(child.backtrackSolution());
-
-//						System.out.println("Moves this far: " + childMoves);
-
-						String intermediateMoves =
-								reverseString(
-										child.getConnectivity().backtrackPathString(
-										matched.playerPosition,
-										child.playerPosition));
-//						System.out.println("Intermediate moves: " + intermediateMoves);
-
-						String futureString = convertBackwardString(matched.backtrackSolution());
-//						System.out.println("Future moves: " + futureString);
-
-//						System.out.println("Future:");
-//						for(State s = matched.parent; s != null; s = s.parent) {
-//							System.out.println(s);
-//						}
-						return childMoves + intermediateMoves + futureString;
+						return reverseString(child.backtrackSolution())
+								+ reverseString(child.getConnectivity()
+										.backtrackPathString(
+												matched.playerPosition,
+												child.playerPosition))
+								+ convertBackwardString(matched
+										.backtrackSolution());
 					}
 
 					int childCost = child.getNumberOfSignificantMoves() + child.getHeuristicValue();
