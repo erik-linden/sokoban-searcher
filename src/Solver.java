@@ -84,7 +84,7 @@ public class Solver {
 	}
 
 	public static Set<State> backwardBFS(ArrayList<String> lines, Deadline deadline) {
-		System.out.println("Searching from:");
+		System.out.println("Searching backward from:");
 		System.out.println(Board.initialState);
 
 		Queue<State> q = new LinkedList<State>();
@@ -208,8 +208,8 @@ public class Solver {
 					}
 
 					if(backwardVisited.contains(child)) {
-//						System.out.println("Found match with backward solution!");
-//						System.out.println("Time remaining: " + deadline.timeUntil() + " ms");
+						System.out.println("Found match with backward solution!");
+						System.out.println("Time remaining: " + deadline.timeUntil() + " ms");
 //						System.out.println("This state:");
 //						System.out.println(child);
 //						System.out.println("Matched state:");
